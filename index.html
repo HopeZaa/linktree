@@ -12,43 +12,53 @@
       background: black;
       color: #00ff88;
       height: 100%;
-      overflow: hidden;
+      overflow-x: hidden;
     }
+
     canvas {
       position: fixed;
       top: 0;
       left: 0;
       z-index: 0;
     }
+
     .container {
       position: relative;
       z-index: 1;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
       gap: 2rem;
       max-width: 1000px;
       width: 90%;
       margin: auto;
       min-height: 100vh;
-      align-items: center;
+      padding: 2rem 0;
     }
+
     .profile, .links {
       background: rgba(0, 0, 0, 0.7);
       padding: 2rem;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      word-wrap: break-word;
     }
+
     h1 {
       font-size: 2rem;
       margin-bottom: 0.5rem;
       color: #39ff14;
+      word-break: break-word;
     }
+
     p {
       font-size: 0.9rem;
       line-height: 1.5;
       margin-bottom: 1rem;
       color: #9ef7c5;
     }
+
     .link-btn {
       display: flex;
       align-items: center;
@@ -61,12 +71,15 @@
       color: #00ff88;
       transition: background 0.3s, transform 0.2s;
       font-size: 1rem;
+      flex-wrap: wrap;
     }
+
     .link-btn:hover {
       background: #00ff88;
       color: #0d1117;
       transform: translateY(-2px);
     }
+
     .icon {
       font-size: 1.2rem;
     }
@@ -81,11 +94,39 @@
       border-radius: 8px;
       margin-top: 1rem;
       overflow: hidden;
-      height: 200px;
+      max-height: 300px;
     }
-    @media (max-width: 768px) {
+
+    @media (max-width: 1024px) {
       .container {
-        grid-template-columns: 1fr;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem 0;
+      }
+      h1 {
+        font-size: 1.8rem;
+      }
+      p {
+        font-size: 0.85rem;
+      }
+      #donut {
+        font-size: 6px;
+        line-height: 5px;
+        max-height: 200px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.6rem;
+      }
+      p {
+        font-size: 0.8rem;
+      }
+      #donut {
+        font-size: 5px;
+        line-height: 4px;
+        max-height: 180px;
       }
     }
   </style>
@@ -195,6 +236,3 @@
   </script>
 </body>
 </html>
-
-
-
