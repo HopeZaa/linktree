@@ -45,6 +45,11 @@
       word-wrap: break-word;
     }
 
+    .profile h1, 
+    .profile p {
+      text-align: left;
+    }
+
     h1 {
       font-size: 2rem;
       margin-bottom: 0.5rem;
@@ -72,6 +77,8 @@
       transition: background 0.3s, transform 0.2s;
       font-size: 1rem;
       flex-wrap: wrap;
+      cursor: pointer;
+      border: none;
     }
 
     .link-btn:hover {
@@ -82,6 +89,14 @@
 
     .icon {
       font-size: 1.2rem;
+    }
+
+    .center-content {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
     #donut {
@@ -95,6 +110,21 @@
       margin-top: 1rem;
       overflow: hidden;
       max-height: 300px;
+    }
+
+    #profile-pic {
+      display: none;
+      width: 200px;
+      border-radius: 12px;
+      margin-top: 1rem;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      box-shadow: 0 0 25px rgba(0, 255, 136, 0.7);
+    }
+
+    #profile-pic.show {
+      display: block;
+      opacity: 1;
     }
 
     @media (max-width: 1024px) {
@@ -139,15 +169,23 @@
   <div class="container">
     <div class="profile">
       <h1>Sirawich Roopngam</h1>
-      <p>High School Students @ Prommanusorn School</p>
+      <p>High School Student @ Prommanusorn School</p>
       <p>
-        💻 Experienced in Coding, Front-End Web Development and Competitive programming.<br>
+        💻 Experienced in Coding, Front-End Web Development and Competitive Programming.<br>
         🚀 Proficient in [C, C++, Python]<br>
         🚀 Sufficient in [C#, CSS, HTML, JavaScript]<br>
         🔧 IoT Projects
       </p>
 
-      <pre id="donut"></pre>
+      <div class="center-content">
+        <pre id="donut"></pre>
+
+        <button id="show-photo" class="link-btn">
+          <i class="fas fa-user icon"></i> Show Photo
+        </button>
+
+        <img id="profile-pic" src="https://i.postimg.cc/YLwFH5b2/HopeZaa.png" alt="Sirawich Roopngam">
+      </div>
     </div>
 
     <div class="links">
@@ -233,7 +271,16 @@
       B += 0.02;
     }
     setInterval(renderDonut, 50);
+
+    const showPhotoBtn = document.getElementById("show-photo");
+    const profilePic = document.getElementById("profile-pic");
+
+    showPhotoBtn.addEventListener("click", () => {
+      profilePic.classList.toggle("show");
+      showPhotoBtn.innerHTML = profilePic.classList.contains("show")
+        ? '<i class="fas fa-user-slash icon"></i> Hide Photo'
+        : '<i class="fas fa-user icon"></i> Show Photo';
+    });
   </script>
 </body>
 </html>
-
