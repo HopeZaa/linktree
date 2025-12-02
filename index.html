@@ -1,192 +1,278 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Linktree Dev Theme</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HopeZaa</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
-    body, html {
+    html, body {
       margin: 0;
       padding: 0;
-      font-family: "Fira Code", monospace;
-      background: black;
-      color: #00ff88;
       height: 100%;
+      background: black;
+      font-family: 'Fira Code', monospace;
+      color: #00ff88;
       overflow-x: hidden;
+      scroll-behavior: smooth;
     }
 
     canvas {
       position: fixed;
       top: 0;
       left: 0;
-      z-index: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
     }
 
-    .container {
-      position: relative;
-      z-index: 1;
+    .section {
+      height: 100vh;
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 2rem;
-      max-width: 1000px;
-      width: 90%;
-      margin: auto;
-      min-height: 100vh;
-      padding: 2rem 0;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(120px) scale(0.8) rotateX(25deg);
+      filter: blur(10px);
+      transition: opacity 1.3s ease, transform 1.3s, filter 1.3s;
+      position: relative;
+      padding: 30px;
     }
 
-    .profile, .links {
-      background: rgba(0, 0, 0, 0.7);
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-      word-wrap: break-word;
+    .section .box {
+      padding: 20px;
+      width: auto;
+      height: auto;
+      background-color: rgba(0, 0, 0, 0.612);
+      border-radius: 10px;
     }
 
-    .profile h1, 
-    .profile p {
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1) rotateX(0deg);
+      filter: blur(0);
+    }
+
+    .btn {
+      margin-top: 20px;
+      padding: 18px 45px;
+      font-size: 24px;
+      color: #00ff88;
+      border: 3px solid #00ff88;
+      border-radius: 14px;
+      background: rgba(0, 0, 0, 0.35);
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 20px #00ff8877, inset 0 0 10px #00ff8844;
+      backdrop-filter: blur(4px);
+    }
+    .btn:hover {
+      background: #00ff88;
+      color: black;
+      transform: scale(1.05);
+    }
+
+    .back-btn {
+      position: absolute;
+      top: 25px;
+      left: 25px;
+      padding: 12px 25px;
+      font-size: 20px;
+      color: #00ff88;
+      background: rgba(0, 0, 0, 0.4);
+      border: 2px solid #00ff88;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 0 10px #00ff8877;
+    }
+    .back-btn:hover {
+      background: #00ff88;
+      color: black;
+      transform: scale(1.1);
+    }
+
+    .glow-title {
+      font-size: 70px;
+      margin: 0;
+      color: #00ff88;
+      text-shadow:
+        0 0 15px #00ff88,
+        0 0 30px #00ff88,
+        0 0 60px #00ff88,
+        0 0 90px #00ffaa,
+        0 0 120px #00ffaa;
+      animation: glowPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+      0% { text-shadow: 0 0 20px #00ff88, 0 0 40px #00ff88; }
+      50% { text-shadow: 0 0 40px #00ffaa, 0 0 80px #00ffaa, 0 0 120px #ffffff; }
+      100% { text-shadow: 0 0 20px #00ff88, 0 0 40px #00ff88; }
+    }
+
+    #profile-container {
+      display: flex;
+      width: 80%;
+      max-width: 1100px;
+      justify-content: space-between;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .img-box {
+      width: 45%;
+      height: 420px;
+      background: #0a0a0a;
+      border: 2px solid #00ff88;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 0 20px #00ff8899;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .img-cover {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #000, #003300, #000);
+      transition: 0.5s ease;
+    }
+
+    .img-box:hover .img-cover {
+      opacity: 0;
+    }
+
+    .img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-text {
+      width: 50%;
       text-align: left;
+      font-size: 20px;
+      line-height: 1.7;
     }
 
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-      color: #39ff14;
-      word-break: break-word;
+    .profile-text h1 {
+      font-size: 40px;
+      color: #00ffaa;
+      margin-bottom: 20px;
     }
 
-    p {
-      font-size: 0.9rem;
-      line-height: 1.5;
-      margin-bottom: 1rem;
-      color: #9ef7c5;
+    .profile-text .motto {
+      margin-top: 25px;
+      font-size: 22px;
+      color: #ffffff;
+      text-shadow: 0 0 10px #00ffaa;
+      font-style: italic;
+    }
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 40px;
+      width: 300px;
     }
 
     .link-btn {
       display: flex;
       align-items: center;
-      gap: 10px;
-      background: #0d1117;
-      padding: 12px 16px;
-      border-radius: 8px;
-      margin-bottom: 12px;
-      text-decoration: none;
+      justify-content: center;
+      padding: 15px;
+      border: 2px solid #00ff88;
+      border-radius: 12px;
       color: #00ff88;
-      transition: background 0.3s, transform 0.2s;
-      font-size: 1rem;
-      flex-wrap: wrap;
-      cursor: pointer;
-      border: none;
+      text-decoration: none;
+      font-size: 22px;
+      transition: 0.3s;
+      background: rgba(0, 0, 0, 0.4);
     }
 
     .link-btn:hover {
       background: #00ff88;
-      color: #0d1117;
-      transform: translateY(-2px);
+      color: black;
+      transform: scale(1.05);
     }
 
     .icon {
-      font-size: 1.2rem;
+      margin-right: 12px;
+      font-size: 26px;
     }
 
-    .center-content {
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+    .mouse-glow {
+      position: fixed;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      pointer-events: none;
+      background: radial-gradient(circle, rgba(0,255,136,0.35) 0%, rgba(0,255,136,0.05) 60%, transparent 100%);
+      filter: blur(20px);
+      transform: translate(-50%, -50%);
+      z-index: 3;
     }
 
-    #donut {
-      font-size: 10px;
-      line-height: 8px;
-      white-space: pre;
-      color: #00ff88;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 1rem;
-      border-radius: 8px;
-      margin-top: 1rem;
-      overflow: hidden;
-      max-height: 300px;
-    }
-
-    #profile-pic {
-      display: none;
-      width: 200px;
-      border-radius: 12px;
-      margin-top: 1rem;
-      opacity: 0;
-      transition: opacity 0.6s ease;
-      box-shadow: 0 0 25px rgba(0, 255, 136, 0.7);
-    }
-
-    #profile-pic.show {
-      display: block;
-      opacity: 1;
-    }
-
-    @media (max-width: 1024px) {
-      .container {
-        flex-direction: column;
-        align-items: center;
-        padding: 1rem 0;
-      }
-      h1 {
-        font-size: 1.8rem;
-      }
-      p {
-        font-size: 0.85rem;
-      }
-      #donut {
-        font-size: 6px;
-        line-height: 5px;
-        max-height: 200px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 1.6rem;
-      }
-      p {
-        font-size: 0.8rem;
-      }
-      #donut {
-        font-size: 5px;
-        line-height: 4px;
-        max-height: 180px;
-      }
-    }
   </style>
-  <script src="https://kit.fontawesome.com/4e5ba5b2a2.js" crossorigin="anonymous"></script>
 </head>
 <body>
+  <div id="mouseGlow" class="mouse-glow"></div>
 
-  <canvas id="matrix"></canvas>
-
-  <div class="container">
-    <div class="profile">
-      <h1>Sirawich Roopngam</h1>
-      <p>High School Student @ Prommanusorn School</p>
-      <p>
-        💻 Experienced in Coding, Front-End Web Development and Competitive Programming.<br>
-        🚀 Proficient in [C, C++, Python]<br>
-        🚀 Sufficient in [C#, CSS, HTML, JavaScript]<br>
+  <section class="section" id="home">
+    <canvas id="matrix"></canvas>
+    <h1 class="glow-title">HopeZaa</h1>
+    <h3>Welcome to HopeZaa Website</h3>
+    <p>
+      <div class = "box">
+        💻 Coding, Front-End Web Development<br>
+        🚀 Proficient in C, C++, Python<br>
+        🚀 Sufficient in C#, CSS, HTML, JavaScript<br>
         🔧 IoT Projects
-      </p>
-
-      <div class="center-content">
-        <pre id="donut"></pre>
-
-        <button id="show-photo" class="link-btn">
-          <i class="fas fa-user icon"></i> Show Photo
-        </button>
-
-        <img id="profile-pic" src="https://i.postimg.cc/YLwFH5b2/HopeZaa.png" alt="Sirawich Roopngam">
       </div>
+    </p>
+
+    <button class="btn" onclick="goTo('profile')">My Profile</button>
+    <button class="btn" onclick="goTo('contact')">Contact</button>
+    <button class="btn" onclick="goTo('works')">My Works</button>
+  </section>
+
+  <section class="section" id="profile">
+    <button class="back-btn" onclick="goTo('home')">← Back</button>
+
+    <div id="profile-container">
+      
+      <div class="img-box">
+        <div class="img-cover"></div>
+        <img src="https://i.postimg.cc/xdHFpcB3/Hope-Zaa-logo.jpg" alt="Sirawich Roopngam">
+      </div>
+
+      <div class="profile-text">
+        <h1>Profile</h1>
+
+        My name is <b>Sirawich Roopngam</b><br>
+        Study: <b>Prommanusorn School</b><br>
+        Birth: <b>26 / 07 / 2007</b><br>
+        Religion: <b>Buddhism</b><br>
+        Hobby: <b>Coding, Gaming</b><br>
+
+        <p class="motto">
+          “Effort has never hurt anyone who is determined.”
+        </p>
+      </div>
+
     </div>
+  </section>
+
+  <section class="section" id="contact">
+    <button class="back-btn" onclick="goTo('home')">← Back</button>
+    <h1>Contact Me</h1>
 
     <div class="links">
       <a href="https://github.com/HopeZaa" class="link-btn" target="_blank">
@@ -202,85 +288,70 @@
         <i class="fab fa-instagram icon"></i> Instagram
       </a>
     </div>
-  </div>
+  </section>
 
-  <script>
-    const canvas = document.getElementById("matrix");
-    const ctx = canvas.getContext("2d");
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
-    const letters = "01";
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    const drops = Array(Math.floor(columns)).fill(1);
+  <section class="section" id="works">
+    <button class="back-btn" onclick="goTo('home')">← Back</button>
+    <h1>My Works</h1>
+    <p style="font-size: 25px; opacity: 0.8;">Nothing yet…</p>
+  </section>
 
-    function drawMatrix() {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#00ff88";
-      ctx.font = fontSize + "px monospace";
-      for (let i = 0; i < drops.length; i++) {
-        const text = letters[Math.floor(Math.random() * letters.length)];
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-          drops[i] = 0;
-        }
-        drops[i]++;
-      }
+<script>
+  function goTo(sectionId) {
+    document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+  }
+
+  const canvas = document.getElementById('matrix');
+  const ctx = canvas.getContext('2d');
+
+  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+
+  const letters = '01';
+  const fontSize = 16;
+  const columns = canvas.width / fontSize;
+  const drops = Array(Math.floor(columns)).fill(1);
+
+  function drawMatrix() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#00ff88';
+    ctx.font = fontSize + 'px monospace';
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = letters[Math.floor(Math.random() * letters.length)];
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+
+      drops[i]++;
     }
-    setInterval(drawMatrix, 33);
-    window.addEventListener("resize", () => {
-      canvas.height = window.innerHeight;
-      canvas.width = window.innerWidth;
-    });
+  }
 
-    let A = 0, B = 0;
-    const donutElem = document.getElementById("donut");
-    function renderDonut() {
-      const b = [];
-      const z = [];
-      for (let k = 0; k < 1760; k++) {
-        b[k] = k % 80 === 79 ? "\n" : " ";
-        z[k] = 0;
-      }
-      for (let j = 0; j < 6.28; j += 0.07) {
-        for (let i = 0; i < 6.28; i += 0.02) {
-          const c = Math.sin(i),
-                d = Math.cos(j),
-                e = Math.sin(A),
-                f = Math.sin(j),
-                g = Math.cos(A),
-                h = d + 2,
-                D = 1 / (c * h * e + f * g + 5),
-                l = Math.cos(i),
-                m = Math.cos(B),
-                n = Math.sin(B),
-                t = c * h * g - f * e;
-          const x = Math.floor(40 + 30 * D * (l * h * m - t * n));
-          const y = Math.floor(12 + 15 * D * (l * h * n + t * m));
-          const o = x + 80 * y;
-          const N = Math.floor(8 * ((f * e - c * d * g) * m - c * d * e - f * g - l * d * n));
-          if (22 > y && y > 0 && x > 0 && 80 > x && D > z[o]) {
-            z[o] = D;
-            b[o] = ".,-~:;=!*#$@"[N > 0 ? N : 0];
-          }
+  setInterval(drawMatrix, 33);
+
+  const sections = document.querySelectorAll('.section');
+
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
         }
-      }
-      donutElem.textContent = b.join("");
-      A += 0.04;
-      B += 0.02;
-    }
-    setInterval(renderDonut, 50);
+      });
+    },
+    { threshold: 0.5 }
+  );
 
-    const showPhotoBtn = document.getElementById("show-photo");
-    const profilePic = document.getElementById("profile-pic");
+  sections.forEach(sec => observer.observe(sec));
 
-    showPhotoBtn.addEventListener("click", () => {
-      profilePic.classList.toggle("show");
-      showPhotoBtn.innerHTML = profilePic.classList.contains("show")
-        ? '<i class="fas fa-user-slash icon"></i> Hide Photo'
-        : '<i class="fas fa-user icon"></i> Show Photo';
-    });
-  </script>
+  const glow = document.getElementById("mouseGlow");
+
+  document.addEventListener("mousemove", (e) => {
+    glow.style.left = e.clientX + "px";
+    glow.style.top = e.clientY + "px";
+  });
+</script>
+
 </body>
 </html>
