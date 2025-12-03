@@ -58,6 +58,13 @@
       filter: blur(0);
     }
 
+    .section.leaving {
+      opacity: 0;
+      transform: translateY(120px) scale(0.8) rotateX(25deg);
+      filter: blur(10px);
+      transition: opacity 1s ease, transform 1s, filter 1s;
+    }
+
     .btn {
       margin-top: 20px;
       padding: 18px 45px;
@@ -335,12 +342,20 @@
 
   const observer = new IntersectionObserver(
     entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    },
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        entry.target.classList.remove('leaving');
+      } else {
+        entry.target.classList.remove('visible');
+        entry.target.classList.add('leaving');
+
+        setTimeout(() => {
+          entry.target.classList.remove('leaving');
+        }, 0);
+      }
+    });
+  },
     { threshold: 0 }
   );
 
@@ -356,6 +371,3 @@
 
 </body>
 </html>
-
-
-
