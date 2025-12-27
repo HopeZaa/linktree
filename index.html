@@ -233,6 +233,127 @@
       z-index: 3;
     }
 
+    .works-container {
+      margin-top: 40px;
+      width: 70%;
+      max-width: 700px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 2px solid #00ff88;
+      border-radius: 20px;
+      padding: 35px;
+      box-shadow: 0 0 25px #00ff8877;
+    }
+
+    .works-title {
+      font-size: 55px;
+      margin-bottom: 35px;
+      color: #00ff88;
+      text-shadow: 0 0 25px #00ff88;
+    }
+
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 25px;
+      margin-bottom: 18px;
+      border-radius: 14px;
+      font-size: 24px;
+      background: rgba(0, 255, 136, 0.08);
+      border: 1.5px solid #00ff88;
+      box-shadow: inset 0 0 10px #00ff8833;
+      transition: 0.3s;
+    }
+
+    .check-item:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 20px #00ff88aa;
+    }
+
+    .check-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .check-done {
+      color: #00ffaa;
+      text-shadow: 0 0 10px #00ffaa;
+    }
+
+    .check-soon {
+      color: #aaaaaa;
+      opacity: 0.7;
+    }
+
+    .status {
+      font-size: 18px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 1px solid;
+    }
+
+    .status.done {
+      color: black;
+      background: #00ff88;
+      border-color: #00ff88;
+    }
+
+    .status.soon {
+      color: #00ff88;
+      background: transparent;
+      border-color: #00ff88;
+    }
+    
+    .check-item {
+      position: relative;
+    }
+
+    .view-btn {
+      position: absolute;
+      right: -140px;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 10px 28px;
+      font-size: 18px;
+      border-radius: 30px;
+      background: #00ff88;
+      color: black;
+      border: none;
+      cursor: pointer;
+      font-family: 'Fira Code', monospace;
+      box-shadow: 0 0 15px #00ff88;
+      transition: 0.4s ease;
+      text-decoration: none;
+      opacity: 0;
+    }
+
+    .check-item:hover .view-btn {
+      right: 25px;
+      opacity: 1;
+    }
+
+    .view-btn:hover {
+      transform: translateY(-50%) scale(1.08);
+      box-shadow: 0 0 25px #00ffaa;
+    }
+
+    .check-item .status.done {
+      transition: 0.4s ease;
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .check-item:hover .status.done {
+      opacity: 0;
+      transform: translateX(-15px);
+    }
   </style>
 </head>
 <body>
@@ -253,7 +374,7 @@
 
     <button class="btn" onclick="goTo('profile')">My Profile</button>
     <button class="btn" onclick="goTo('contact')">Contact</button>
-    <button class="btn" onclick="goTo('works')">My Works</button>
+    <button class="btn" onclick="goTo('works')">Archievement</button>
   </section>
 
   <section class="section" id="profile">
@@ -305,8 +426,48 @@
 
   <section class="section" id="works">
     <button class="back-btn" onclick="goTo('home')">← Back</button>
-    <h1>My Works</h1>
-    <p style="font-size: 25px; opacity: 0.8;">Nothing yet…</p>
+  
+    <h1 class="works-title">Archievement</h1>
+  
+    <div class="works-container">
+      <ul class="checklist">
+  
+        <li class="check-item">
+          <div class="check-left check-done">
+            <i class="fas fa-check-circle"></i>
+            My Portfolio
+          </div>
+          <span class="status done">Completed</span>
+          <a href="https://hopezaa.github.io/Portfolio/" class="view-btn"> VIEW </a>
+        </li>
+  
+        <li class="check-item">
+          <div class="check-left check-done">
+            <i class="fas fa-check-circle"></i>
+            Devlab 4
+          </div>
+          <span class="status done">Completed</span>
+          <a href="https://www.borntodev.com/devlab/profile/66665" class="view-btn"> VIEW </a>
+        </li>
+  
+        <li class="check-item">
+          <div class="check-left check-soon">
+            <i class="far fa-circle"></i>
+            Nothing..
+          </div>
+          <span class="status soon">Soon</span>
+        </li>
+  
+        <li class="check-item">
+          <div class="check-left check-soon">
+            <i class="far fa-circle"></i>
+            Nothing..
+          </div>
+          <span class="status soon">Soon</span>
+        </li>
+  
+      </ul>
+    </div>
   </section>
 
 <script>
