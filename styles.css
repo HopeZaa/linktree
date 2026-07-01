@@ -9,7 +9,8 @@
   --muted: #91a4bc;
   --blue: #36b6ff;
   --blue-deep: #0d65ff;
-  --gold: #f2c766;
+  /* --gold: #f2c766; */
+  --gold: #ffffff;
   --gold-soft: rgba(242, 199, 102, 0.18);
   --shadow-blue: rgba(41, 162, 255, 0.32);
   --max: 1180px;
@@ -371,7 +372,7 @@ pre {
 
 .horizontal-track {
   position: absolute;
-  bottom: clamp(74px, 12vh, 118px);
+  bottom: clamp(74px, 8vh, 118px);
   left: 0;
   display: flex;
   gap: clamp(18px, 4vw, 46px);
