@@ -534,7 +534,9 @@ pre {
   z-index: -1;
   opacity: var(--motto-field-opacity, 0.2);
   background:
-    radial-gradient(ellipse at center, rgba(242, 199, 102, 0.26), transparent 32%),
+    /* radial-gradient(ellipse at center, rgba(242, 199, 102, 0.26), transparent 32%),
+    linear-gradient(90deg, transparent, rgba(242, 199, 102, 0.08), transparent); */
+    radial-gradient(ellipse at center, rgba(111, 102, 242, 0.26), transparent 32%),
     linear-gradient(90deg, transparent, rgba(242, 199, 102, 0.08), transparent);
   filter: blur(var(--motto-blur, 12px));
   transform: scale(var(--motto-field-scale, 0.88));
@@ -548,7 +550,7 @@ pre {
   top: 50%;
   width: min(72vw, 860px);
   height: min(72vw, 860px);
-  border: 1px solid rgba(242, 199, 102, 0.22);
+  border: 1px solid rgba(113, 87, 241, 0.22);
   border-radius: 999px;
   transform:
     translate(-50%, -50%)
@@ -558,7 +560,7 @@ pre {
 .gold-field::after {
   width: min(54vw, 620px);
   height: min(54vw, 620px);
-  border-color: rgba(255, 244, 186, 0.16);
+  border-color: rgba(96, 77, 223, 0.16);
   transform:
     translate(-50%, -50%)
     rotate(var(--motto-rotate-b, 0deg));
@@ -575,8 +577,10 @@ blockquote {
   letter-spacing: 0;
   opacity: var(--motto-quote-opacity, 0.34);
   text-shadow:
-    0 0 var(--motto-shadow-a, 0px) rgba(242, 199, 102, 0.9),
-    0 0 var(--motto-shadow-b, 0px) rgba(242, 199, 102, 0.55);
+    /* 0 0 var(--motto-shadow-a, 0px) rgba(242, 199, 102, 0.9),
+    0 0 var(--motto-shadow-b, 0px) rgba(242, 199, 102, 0.55); */
+    0 0 var(--motto-shadow-a, 0px) rgba(102, 125, 242, 0.9),
+    0 0 var(--motto-shadow-b, 0px) rgba(102, 102, 242, 0.55);
   transform:
     translate3d(0, var(--motto-y, 42px), 0)
     scale(var(--motto-quote-scale, 0.94));
