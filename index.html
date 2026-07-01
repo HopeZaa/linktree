@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta
+      name="description"
+      content="HopeZaa personal parallax website for Sirawich Roopngam."
+    />
+    <title>HopeZaa</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="icon" href="https://i.postimg.cc/J0LWpzZm/Hope-Zaa-Favicon.png" type="image/png">
+  </head>
+  <body>
+    <div class="loader" id="loader" aria-label="Loading HopeZaa website">
+      <div class="loader-grid"></div>
+      <div class="loader-core">
+        <p class="loader-kicker">Initializing</p>
+        <h1>HopeZaa</h1>
+        <div class="loader-line" aria-hidden="true"><span></span></div>
+      </div>
+    </div>
+
+    <canvas id="ambient-canvas" aria-hidden="true"></canvas>
+
+    <header class="site-header" aria-label="Site header">
+      <a class="brand" href="#home" aria-label="HopeZaa home">
+        <span class="brand-mark">HZ</span>
+        <span>HopeZaa</span>
+      </a>
+      <div class="scroll-meter" aria-hidden="true"><span></span></div>
+    </header>
+
+    <main>
+      <section class="hero panel" id="home" data-section>
+        <div class="hero-orbit" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="hero-content reveal">
+          <p class="eyebrow">Personal Interface</p>
+          <h2>Welcome to HopeZaa Website</h2>
+          <p class="hero-copy">
+            Chulalongkorn University student
+            [CEDT 04]
+          </p>
+        </div>
+        <div class="hero-console reveal" aria-label="Profile status">
+          <div class="console-bar">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <pre><code>const profile = {
+  handle: "HopeZaa",
+  focus: "Coding",
+  mode: "Parallax"
+};</code></pre>
+        </div>
+      </section>
+
+      <section class="horizontal-stage skills-stage" id="skills" data-horizontal>
+        <div class="sticky-wrap">
+          <div class="stage-meta reveal">
+            <p class="eyebrow">Skill Stack</p>
+            <h2>Scroll Through Capability</h2>
+          </div>
+          <div class="horizontal-track" data-track>
+            <article class="h-card skill-card">
+              <p class="card-number">01</p>
+              <h3>Coding &amp; Front-End Web Development</h3>
+              <p>
+                Building responsive interfaces with motion, structure, and clean
+                interaction flow.
+              </p>
+            </article>
+            <article class="h-card skill-card">
+              <p class="card-number">02</p>
+              <h3>Proficient in C, C++, Python</h3>
+              <p>
+                Comfortable with fundamentals, algorithms, problem solving, and
+                practical automation.
+              </p>
+            </article>
+            <article class="h-card skill-card">
+              <p class="card-number">03</p>
+              <h3>Sufficient in C#, CSS, HTML, JavaScript</h3>
+              <p>
+                Able to shape visual interfaces, write web logic, and connect
+                ideas into working products.
+              </p>
+            </article>
+            <article class="h-card skill-card">
+              <p class="card-number">04</p>
+              <h3>IoT Projects</h3>
+              <p>
+                Exploring connected devices, sensors, embedded logic, and
+                real-world automation.
+              </p>
+            </article>
+          </div>
+          <div class="stage-progress" aria-hidden="true"><span></span></div>
+        </div>
+      </section>
+
+      <section class="profile panel" id="profile" data-section>
+        <div class="profile-copy reveal">
+          <p class="eyebrow">Personal History</p>
+          <h2>Sirawich Roopngam</h2>
+          <p>
+            A developer-minded student focused on code, creative interfaces, and
+            technical projects that feel polished from the first interaction.
+          </p>
+        </div>
+        <div class="profile-grid reveal">
+          <div class="profile-item">
+            <span>Name</span>
+            <strong>Sirawich Roopngam</strong>
+          </div>
+          <div class="profile-item">
+            <span>Study</span>
+            <strong>Chulalongkorn University</strong>
+          </div>
+          <div class="profile-item">
+            <span>Birth</span>
+            <strong>26 / 07 / 2007</strong>
+          </div>
+          <div class="profile-item">
+            <span>Religion</span>
+            <strong>Buddhism</strong>
+          </div>
+          <div class="profile-item wide">
+            <span>Hobby</span>
+            <strong>Coding, Gaming</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="motto-stage" id="motto" data-motto>
+        <div class="motto-sticky">
+          <div class="gold-field" aria-hidden="true"></div>
+          <p class="eyebrow">Motto</p>
+          <blockquote>
+            "Effort has never hurt anyone who is determined."
+          </blockquote>
+        </div>
+      </section>
+
+      <section class="contact panel" id="contact" data-section>
+        <div class="contact-intro reveal">
+          <p class="eyebrow">Contact</p>
+          <h2>Connect With HopeZaa</h2>
+        </div>
+        <div class="contact-grid reveal">
+          <a class="contact-link" href="https://github.com/HopeZaa" target="_blank" rel="noreferrer">
+            <span class="contact-code">GH</span>
+            <strong>GitHub</strong>
+            <small>github.com/HopeZaa</small>
+          </a>
+          <a class="contact-link" href="https://mail.google.com/mail/u/0/?fs=1&amp;to=hoperoopngam@gmail.com&amp;tf=cm" target="_blank" rel="noreferrer">
+            <span class="contact-code">GM</span>
+            <strong>Gmail</strong>
+            <small>hoperoopngam@gmail.com</small>
+          </a>
+          <a class="contact-link" href="https://web.facebook.com/im.hxpe/?_rdc=1&amp;_rdr#" target="_blank" rel="noreferrer">
+            <span class="contact-code">FB</span>
+            <strong>Facebook</strong>
+            <small>im.hxpe</small>
+          </a>
+          <a class="contact-link" href="https://www.instagram.com/im._hxpe/" target="_blank" rel="noreferrer">
+            <span class="contact-code">IG</span>
+            <strong>Instagram</strong>
+            <small>im._hxpe</small>
+          </a>
+        </div>
+      </section>
+
+      <section class="horizontal-stage achievement-stage" id="achievement" data-horizontal>
+        <div class="sticky-wrap">
+          <div class="stage-meta reveal">
+            <p class="eyebrow">Achievement</p>
+            <h2>Selected Links</h2>
+          </div>
+          <div class="horizontal-track achievement-track" data-track>
+            <a
+              class="h-card achievement-card"
+              href="https://hopezaa.github.io/Portfolio/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <p class="card-number">01</p>
+              <h3>Portfolio</h3>
+              <p>Open the portfolio showcase.</p>
+              <span class="card-action">Open Project</span>
+            </a>
+            <a
+              class="h-card achievement-card"
+              href="https://www.borntodev.com/devlab/profile/66665"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <p class="card-number">02</p>
+              <h3>Devlab</h3>
+              <p>View the BornToDev Devlab profile.</p>
+              <span class="card-action">Open Profile</span>
+            </a>
+          </div>
+          <div class="stage-progress" aria-hidden="true"><span></span></div>
+        </div>
+      </section>
+
+      <section class="music panel" id="music" data-section>
+        <div class="music-shell reveal">
+          <div class="music-copy">
+            <p class="eyebrow">Audio Room</p>
+            <h2>YouTube Playlist Player</h2>
+            <p id="track-name">HopeZaa Playlist</p>
+          </div>
+          <div class="youtube-player-wrap">
+            <div id="youtube-player" aria-label="YouTube playlist player"></div>
+          </div>
+          <div class="visualizer" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div class="player-controls" aria-label="Music player controls">
+            <button type="button" class="control-btn" id="prev-track" aria-label="Previous track">
+              Prev
+            </button>
+            <button type="button" class="control-btn primary" id="play-toggle" aria-label="Play music">
+              Play
+            </button>
+            <button type="button" class="control-btn" id="next-track" aria-label="Next track">
+              Next
+            </button>
+          </div>
+          <label class="volume-control" for="volume">
+            <span>Volume</span>
+            <input id="volume" type="range" min="0" max="100" value="45" />
+          </label>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
