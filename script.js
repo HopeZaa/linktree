@@ -125,11 +125,11 @@ if (brandDock && brandHint) {
     window.clearTimeout(hintTimeout);
   };
 
-  if (!window.localStorage.getItem(HINT_SEEN_KEY)) {
+  if (!window.sessionStorage.getItem(HINT_SEEN_KEY)) {
     window.addEventListener("load", () => {
       window.setTimeout(() => {
         body.classList.add("hint-visible");
-        window.localStorage.setItem(HINT_SEEN_KEY, "1");
+        window.sessionStorage.setItem(HINT_SEEN_KEY, "1");
         hintTimeout = window.setTimeout(dismissHint, 4200);
       }, 1400);
     });
