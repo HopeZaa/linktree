@@ -166,110 +166,6 @@ body.is-loaded .loader {
   opacity: 0;
 }
 
-body.is-mobile-landscape {
-  overflow: hidden;
-}
-
-.orientation-lock {
-  position: fixed;
-  inset: 0;
-  z-index: 200;
-  display: grid;
-  place-items: center;
-  padding: 24px;
-  color: var(--text);
-  background:
-    linear-gradient(180deg, rgba(3, 5, 10, 0.9), rgba(3, 5, 10, 0.98)),
-    radial-gradient(circle at 50% 50%, rgba(54, 182, 255, 0.18), transparent 52%),
-    var(--bg);
-  opacity: 0;
-  pointer-events: none;
-  visibility: hidden;
-  transition:
-    opacity 220ms ease,
-    visibility 220ms ease;
-}
-
-body.is-mobile-landscape .orientation-lock {
-  opacity: 1;
-  pointer-events: auto;
-  visibility: visible;
-}
-
-.orientation-lock-panel {
-  display: grid;
-  width: min(100%, 420px);
-  justify-items: center;
-  border: 1px solid rgba(120, 185, 255, 0.28);
-  border-radius: 8px;
-  padding: 28px;
-  background: rgba(8, 14, 24, 0.88);
-  box-shadow:
-    0 24px 80px rgba(0, 0, 0, 0.5),
-    0 0 44px rgba(54, 182, 255, 0.14);
-  text-align: center;
-}
-
-.orientation-phone {
-  position: relative;
-  width: 82px;
-  height: 128px;
-  border: 3px solid var(--blue);
-  border-radius: 18px;
-  box-shadow:
-    0 0 24px rgba(54, 182, 255, 0.34),
-    inset 0 0 18px rgba(54, 182, 255, 0.1);
-}
-
-.orientation-phone::before {
-  content: "";
-  position: absolute;
-  top: 8px;
-  left: 50%;
-  width: 24px;
-  height: 4px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.55);
-  transform: translateX(-50%);
-}
-
-.orientation-phone::after {
-  content: "";
-  position: absolute;
-  right: -24px;
-  bottom: 24px;
-  width: 34px;
-  height: 34px;
-  border-top: 3px solid white;
-  border-right: 3px solid white;
-  border-radius: 0 12px 0 0;
-}
-
-.orientation-kicker {
-  margin: 22px 0 10px;
-  color: var(--blue);
-  font-size: 0.72rem;
-  font-weight: 900;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.orientation-lock h2 {
-  margin: 0;
-  color: white;
-  font-size: clamp(1.55rem, 7vw, 2.35rem);
-  line-height: 1.2;
-  letter-spacing: 0;
-}
-
-.orientation-lock p:last-child {
-  max-width: 320px;
-  margin: 14px 0 0;
-  color: var(--muted);
-  font-size: 1rem;
-  line-height: 1.65;
-}
-
 .site-header {
   position: fixed;
   top: 0;
@@ -458,7 +354,7 @@ pre {
 }
 
 .achievement-stage {
-  height: 520vh;
+  height: 300vh;
 }
 
 .sticky-wrap {

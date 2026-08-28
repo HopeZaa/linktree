@@ -6,41 +6,9 @@ const scrollMeter = document.querySelector(".scroll-meter span");
 const horizontalStages = [...document.querySelectorAll("[data-horizontal]")];
 const revealItems = [...document.querySelectorAll(".reveal")];
 const mottoStage = document.querySelector("[data-motto]");
-const orientationLock = document.getElementById("orientation-lock");
-const coarsePointerMedia = window.matchMedia("(hover: none) and (pointer: coarse)");
 
 let latestScroll = window.scrollY;
 let ticking = false;
-
-function getViewportSize() {
-  const viewport = window.visualViewport;
-
-  return {
-    width: viewport?.width || window.innerWidth,
-    height: viewport?.height || window.innerHeight,
-  };
-}
-
-function shouldLockMobileLandscape() {
-  const { width, height } = getViewportSize();
-  const shortestSide = Math.min(width, height);
-  const longestSide = Math.max(width, height);
-  const isLandscape = width > height;
-  const hasTouchInput = coarsePointerMedia.matches || navigator.maxTouchPoints > 1;
-  const isPhoneViewport = shortestSide <= 500 && longestSide <= 980;
-
-  return isLandscape && hasTouchInput && isPhoneViewport;
-}
-
-function updateOrientationLock() {
-  if (!orientationLock) return;
-
-  const shouldLock = shouldLockMobileLandscape();
-
-  body.classList.toggle("is-mobile-landscape", shouldLock);
-  orientationLock.hidden = !shouldLock;
-  orientationLock.setAttribute("aria-hidden", String(!shouldLock));
-}
 
 window.addEventListener("load", () => {
   setTimeout(() => {
@@ -143,15 +111,6 @@ function requestUpdate() {
 
 window.addEventListener("scroll", requestUpdate, { passive: true });
 window.addEventListener("resize", requestUpdate);
-window.addEventListener("resize", updateOrientationLock);
-window.addEventListener("orientationchange", updateOrientationLock);
-window.visualViewport?.addEventListener("resize", updateOrientationLock);
-if (coarsePointerMedia.addEventListener) {
-  coarsePointerMedia.addEventListener("change", updateOrientationLock);
-} else {
-  coarsePointerMedia.addListener?.(updateOrientationLock);
-}
-updateOrientationLock();
 update();
 
 const canvas = document.getElementById("ambient-canvas");
