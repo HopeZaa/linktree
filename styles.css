@@ -161,6 +161,29 @@ button {
   animation: loadingLine 1100ms ease-in-out infinite;
 }
 
+.loader-hint {
+  position: absolute;
+  bottom: clamp(28px, 7vh, 60px);
+  left: 50%;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-align: center;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate3d(-50%, 6px, 0);
+  animation: loaderHintFade 1400ms ease forwards 100ms;
+}
+
+@keyframes loaderHintFade {
+  to {
+    opacity: 0.4;
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
 body.is-loaded .loader {
   visibility: hidden;
   opacity: 0;
@@ -201,6 +224,71 @@ body.is-loaded .loader {
   color: white;
   font-weight: 800;
   pointer-events: auto;
+}
+
+.brand-mark {
+  animation: brandGlow 3200ms ease-in-out infinite;
+}
+
+@keyframes brandGlow {
+  0%,
+  100% {
+    border-color: var(--line-bright);
+    box-shadow: 0 0 24px rgba(54, 182, 255, 0.2);
+  }
+  50% {
+    border-color: rgba(160, 214, 255, 0.9);
+    box-shadow: 0 0 40px rgba(54, 182, 255, 0.52);
+  }
+}
+
+.brand-hint {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: clamp(-44px, -4vw, -18px);
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid rgba(120, 185, 255, 0.34);
+  border-radius: 999px;
+  padding: 9px 18px;
+  background: rgba(3, 8, 16, 0.94);
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow:
+    0 14px 40px rgba(0, 0, 0, 0.4),
+    0 0 24px rgba(54, 182, 255, 0.16);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate3d(0, -8px, 0);
+  transition:
+    opacity 420ms ease,
+    transform 420ms ease,
+    visibility 0s linear 420ms;
+  pointer-events: none;
+}
+
+.brand-hint::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 28px;
+  border: 6px solid transparent;
+  border-bottom-color: rgba(3, 8, 16, 0.94);
+}
+
+.brand-hint span {
+  color: var(--blue);
+}
+
+body.hint-visible .brand-hint {
+  opacity: 1;
+  visibility: visible;
+  transform: translate3d(0, 0, 0);
+  transition-delay: 0s;
 }
 
 .topic-nav {
@@ -1085,6 +1173,16 @@ body.music-playing .visualizer span:nth-child(8) {
 
   .brand span:last-child {
     display: none;
+  }
+
+  .brand-hint {
+    padding: 8px 14px;
+    font-size: 0.72rem;
+  }
+
+  .loader-hint {
+    width: min(88vw, 320px);
+    white-space: normal;
   }
 
   .scroll-meter {

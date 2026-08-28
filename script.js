@@ -113,6 +113,33 @@ window.addEventListener("scroll", requestUpdate, { passive: true });
 window.addEventListener("resize", requestUpdate);
 update();
 
+const brandDock = document.querySelector(".brand-dock");
+const brandHint = document.getElementById("brand-hint");
+const HINT_SEEN_KEY = "hopezaa-topic-hint-seen";
+
+if (brandDock && brandHint) {
+  let hintTimeout;
+
+  const dismissHint = () => {
+    body.classList.remove("hint-visible");
+    window.clearTimeout(hintTimeout);
+  };
+
+  if (!window.localStorage.getItem(HINT_SEEN_KEY)) {
+    window.addEventListener("load", () => {
+      window.setTimeout(() => {
+        body.classList.add("hint-visible");
+        window.localStorage.setItem(HINT_SEEN_KEY, "1");
+        hintTimeout = window.setTimeout(dismissHint, 4200);
+      }, 1400);
+    });
+  }
+
+  brandDock.addEventListener("mouseenter", dismissHint);
+  brandDock.addEventListener("focusin", dismissHint);
+  brandDock.addEventListener("touchstart", dismissHint, { passive: true });
+}
+
 const canvas = document.getElementById("ambient-canvas");
 const ctx = canvas.getContext("2d");
 let points = [];
