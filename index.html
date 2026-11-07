@@ -16,10 +16,19 @@
       type="image/png"
     />
     <script>
-      document.documentElement.classList.add("js");
+      document.documentElement.classList.add("js", "builder-pending");
+      window.setTimeout(() => {
+        if (!document.documentElement.dataset.builderReady) {
+          document.documentElement.classList.remove(
+            "builder-pending",
+            "motion-enabled",
+          );
+          document.documentElement.classList.add("motion-disabled");
+        }
+      }, 3000);
     </script>
-    <link rel="stylesheet" href="styles.css?v=20261107-cinematic-4" />
-    <script src="script.js?v=20261107-cinematic-4" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20261107-builder-1" />
+    <script src="script.js?v=20261107-builder-1" defer></script>
   </head>
   <body>
     <canvas id="scene-canvas" aria-hidden="true"></canvas>
@@ -79,28 +88,6 @@
       >
     </nav>
     <main id="main">
-      <section class="intro-stage" aria-label="Scroll to build the website">
-        <div class="intro-script" aria-hidden="true">
-          <span class="intro-caption mono"
-            >A BLANK CANVAS. AN OPEN POSSIBILITY.</span
-          >
-          <div class="intro-display">
-            <span>WATCH IT</span
-            ><span class="intro-outline"
-              >TAKE SHAPE<span class="intro-punctuation">.</span></span
-            >
-          </div>
-          <span class="intro-counter mono">SCROLL / CREATE / REPEAT</span>
-        </div>
-        <div class="intro-grid" aria-hidden="true">
-          <span class="intro-cross intro-cross-one">+</span
-          ><span class="intro-cross intro-cross-two">+</span>
-        </div>
-        <a class="intro-guide mono" href="#home"
-          ><span class="intro-line" aria-hidden="true"></span>SCROLL TO
-          BUILD<span aria-hidden="true">↓</span></a
-        >
-      </section>
       <section
         class="hero section-wrap"
         id="home"

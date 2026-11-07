@@ -5187,3 +5187,218 @@ main,
 .motion-disabled .intro-script {
   display: none;
 }
+
+/* A short, task-based build: the cursor draws, drags, then writes real text. */
+.js.builder-pending [data-build],
+.js.builder-pending .site-header,
+.js.builder-pending .build-dock,
+.js.builder-pending .chapter-rail {
+  opacity: 0 !important;
+}
+.js.motion-enabled [data-build] {
+  opacity: var(--part-opacity, 0);
+  translate: var(--place-x, 0px) var(--place-y, 0px);
+}
+.js.motion-enabled [data-build] > :not(.build-frame) {
+  opacity: 1;
+  clip-path: none;
+  translate: none;
+  filter: none;
+}
+.js.motion-enabled .hero-title > .hero-glyph {
+  opacity: 1;
+  transform: none;
+  translate: none;
+  clip-path: none;
+  filter: none;
+}
+.hero-glyph::after {
+  content: attr(data-typed);
+  clip-path: none;
+}
+.js.motion-enabled .hero-title > .hero-glyph[data-typed=""] {
+  opacity: 0;
+}
+.js.motion-enabled .identity-card > .identity-art {
+  opacity: 1;
+  clip-path: none;
+  filter: none;
+  translate: none;
+}
+.builder-text-host {
+  caret-color: transparent;
+}
+.builder-rig {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.builder-rig.is-active {
+  opacity: 1;
+}
+.builder-guides {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.builder-guides path {
+  fill: none;
+  stroke: var(--worker-color);
+  stroke-width: 0.6;
+  stroke-dasharray: 4 7;
+  opacity: 0.25;
+}
+.builder-frame-box,
+.builder-text-box {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border: 1px solid var(--worker-color);
+  pointer-events: none;
+  transform-origin: top left;
+  background: color-mix(in srgb, var(--worker-color) 2%, transparent);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--worker-color) 4%, transparent);
+}
+.builder-frame-box {
+  outline: 1px solid #08080966;
+  outline-offset: 1px;
+}
+.builder-text-box {
+  border-style: dashed;
+  background: transparent;
+  opacity: 0;
+}
+.builder-box-label {
+  position: absolute;
+  left: -1px;
+  top: -17px;
+  white-space: nowrap;
+  padding: 3px 5px;
+  background: var(--worker-color);
+  color: #131014;
+  font: 7px/1.2 var(--mono);
+  letter-spacing: 0.045em;
+  text-transform: uppercase;
+}
+.builder-text-box .builder-box-label {
+  top: -15px;
+  font-size: 6px;
+}
+.builder-handle {
+  position: absolute;
+  display: block;
+  width: 5px;
+  height: 5px;
+  background: #101011;
+  border: 1px solid var(--worker-color);
+}
+.handle-0 {
+  left: -3px;
+  top: -3px;
+}
+.handle-1 {
+  right: -3px;
+  top: -3px;
+}
+.handle-2 {
+  right: -3px;
+  bottom: -3px;
+}
+.handle-3 {
+  left: -3px;
+  bottom: -3px;
+}
+.builder-caret {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: 16px;
+  background: var(--worker-color);
+  opacity: 0;
+  box-shadow: 0 0 7px color-mix(in srgb, var(--worker-color) 20%, transparent);
+}
+.builder-cursor {
+  transition: opacity 0.12s;
+  filter: drop-shadow(0 1px 2px #000b);
+}
+.builder-cursor .builder-ibeam {
+  display: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+.builder-cursor.is-typing .builder-ibeam {
+  display: block;
+}
+.builder-cursor.is-typing .builder-arrow {
+  display: none;
+}
+.builder-cursor .agent-name {
+  font-size: 7px;
+  left: 15px;
+  top: 17px;
+  letter-spacing: 0.01em;
+  padding: 4px 6px;
+}
+.builder-click {
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 11px;
+  height: 11px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(0.7);
+}
+.builder-cursor.is-pressed .builder-click {
+  opacity: 0.75;
+  transform: scale(1.35);
+  background: color-mix(in srgb, currentColor 12%, transparent);
+}
+.builder-cursor.is-pressed .builder-arrow {
+  filter: drop-shadow(0 0 4px currentColor);
+}
+.motion-disabled [data-build] {
+  translate: none;
+}
+.motion-disabled .builder-rig {
+  display: none;
+}
+@media (max-width: 640px) {
+  .builder-box-label {
+    font-size: 6px;
+    top: -15px;
+    padding: 3px 4px;
+  }
+  .builder-text-box .builder-box-label {
+    font-size: 5px;
+    top: -13px;
+  }
+  .builder-cursor .agent-name {
+    font-size: 6px;
+    left: 11px;
+    top: 13px;
+    padding: 3px 5px;
+  }
+  .builder-caret {
+    width: 1.5px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .builder-rig {
+    display: none !important;
+  }
+  .js.motion-enabled [data-build] {
+    opacity: 1;
+    translate: none;
+  }
+  .js.motion-enabled .hero-title > .hero-glyph[data-typed=""] {
+    opacity: 1;
+  }
+}

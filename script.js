@@ -5,6 +5,8 @@
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const compactScreen = matchMedia("(max-width: 640px)");
   const clamp = (value) => Math.max(0, Math.min(1, value));
+  const mix = (a, b, t) => a + (b - a) * t;
+  const ease = (t) => 1 - Math.pow(1 - clamp(t), 3);
   const parts = [...document.querySelectorAll("[data-build]")];
   const sections = [...document.querySelectorAll("[data-section]")];
   const navigation = document.getElementById("site-nav");
@@ -17,9 +19,9 @@
   const motionLabel = document.getElementById("motion-label");
   const replayButton = document.getElementById("replay-build");
   const agentLayer = document.getElementById("agent-layer");
-  const introGuide = document.querySelector(".intro-guide");
+  const ribbon = document.querySelector(".ribbon-track");
   const builders = [
-    { name: "structure", color: "#ffc19b" },
+    { name: "layout", color: "#ffc19b" },
     { name: "type", color: "#d6c6e6" },
     { name: "detail", color: "#ccdda8" },
   ];
@@ -27,91 +29,585 @@
   try {
     preference = localStorage.getItem("hopezaa-motion");
   } catch (_) {
-    /* Optional preference. */
+    /* Optional. */
   }
   let motionEnabled = !reducedMotion.matches && preference !== "off";
-  let frame = 0;
-  let dirty = true;
-  let previousTime = 0;
-  let lastScroll = -2000;
-  let pageProgress = 0;
-  let currentSection = sections[0];
-  let navigationReady = false;
-  let focusedPart = null;
-  let moving = false;
+  let frame = 0,
+    dirty = true,
+    reflowNeeded = false,
+    previousTime = 0;
+  let bootStarted = performance.now();
+  let lastScrollPosition = scrollY,
+    lastScrollSample = bootStarted,
+    scrollSpeed = 0;
+  let currentSection = sections[0],
+    navigationReady = false,
+    pageProgress = 0;
   let emitParticles = () => {};
-  const introScript = document.querySelector(".intro-script");
-  const ribbon = document.querySelector(".ribbon-track");
+
   const title = document.querySelector(".hero-title");
   title.setAttribute("aria-label", "PORTFOLIO");
-  for (const node of [...title.childNodes]) {
+  for (const node of [...title.childNodes])
     if (node.nodeType === Node.TEXT_NODE) node.remove();
-  }
   const glyphs = document.createDocumentFragment();
   for (const character of "PORTFOLIO") {
     const glyph = document.createElement("span");
     glyph.className = "hero-glyph";
     glyph.dataset.char = character;
+    glyph.dataset.typed = "";
     glyph.textContent = character;
     glyph.setAttribute("aria-hidden", "true");
     glyphs.append(glyph);
   }
   title.prepend(glyphs);
-  document.querySelectorAll(".skill-card").forEach((card, i) => {
+  document.querySelectorAll(".skill-card").forEach((card, index) => {
     const watermark = document.createElement("span");
     watermark.className = "skill-watermark";
     watermark.setAttribute("aria-hidden", "true");
-    watermark.textContent = String(i + 1).padStart(2, "0");
+    watermark.textContent = String(index + 1).padStart(2, "0");
     card.append(watermark);
   });
 
-  const states = parts.map((element, index) => {
-    const builder = builders[index % builders.length];
-    element.style.setProperty("--agent-color", builder.color);
-    // Wrap direct text nodes, without changing any grid/flex layout or heading semantics.
-    for (const node of [...element.childNodes]) {
-      if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
-        const text = document.createElement("span");
-        text.className = "build-text";
-        node.replaceWith(text);
-        text.append(node);
-      }
+  function hiddenDecoration(element) {
+    return Boolean(
+      element.closest('[aria-hidden="true"], .build-frame, .builder-rig'),
+    );
+  }
+
+  function createTextTask(element) {
+    const records = [];
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (
+        !node.data.trim() ||
+        hiddenDecoration(node.parentElement) ||
+        node.parentElement.closest("#track-name, #player-status")
+      )
+        continue;
+      const raw = node.data;
+      const text = element.tagName === "PRE" ? raw : raw.replace(/\s+/g, " ");
+      records.push({ node, raw, text });
     }
-    const outline = document.createElement("span");
-    outline.className = "build-frame";
-    outline.setAttribute("aria-hidden", "true");
-    const label = document.createElement("span");
-    label.className = "build-label";
-    label.textContent = `${element.dataset.build} / structure`;
-    const scanner = document.createElement("span");
-    scanner.className = "scan-line";
-    outline.append(label, scanner);
-    element.append(outline);
+    if (!records.length) return null;
+    const task = {
+      element,
+      records,
+      length: records.reduce((n, r) => n + r.text.length, 0),
+      count: -1,
+      height: 0,
+      minHeight: element.style.minHeight,
+      activeNode: null,
+    };
+    element.classList.add("builder-text-host");
+    return task;
+  }
+
+  function collectTextTasks(element) {
+    if (element === title)
+      return [
+        {
+          element,
+          glyphs: [...element.querySelectorAll(".hero-glyph")],
+          length: 9,
+          count: -1,
+          height: 0,
+          activeNode: null,
+        },
+      ];
+    const grouped = [
+      ...element.querySelectorAll(
+        ".profile-details > div, .hero-bottom > div, .identity-bottom",
+      ),
+    ];
+    const blocks = [
+      ...element.querySelectorAll("h2,h3,p,blockquote,dt,dd,pre,strong,small"),
+    ];
+    const leaves = [...element.querySelectorAll("a,.mono")];
+    if (
+      element.matches(".mono") &&
+      !element.querySelector("h2,h3,p,pre,blockquote")
+    )
+      leaves.unshift(element);
+    const candidates = [...new Set([...grouped, ...blocks, ...leaves])].filter(
+      (host) => !hiddenDecoration(host),
+    );
+    const selected = candidates.filter((host) => {
+      if (grouped.includes(host)) return true;
+      if (grouped.some((group) => group.contains(host))) return false;
+      // Select a paragraph/heading once, preserving all of its inline emphasis.
+      if (blocks.includes(host))
+        return !blocks.some((other) => other !== host && other.contains(host));
+      if (
+        blocks.some((block) => block.contains(host)) ||
+        candidates.some((other) => other !== host && host.contains(other))
+      )
+        return false;
+      return true;
+    });
+    selected.sort((a, b) =>
+      a === b
+        ? 0
+        : a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING
+          ? -1
+          : 1,
+    );
+    return selected.map(createTextTask).filter(Boolean);
+  }
+
+  const states = parts.map((element, index) => {
+    element.style.setProperty(
+      "--agent-color",
+      builders[index % builders.length].color,
+    );
     return {
       element,
-      label,
-      progress: 0,
-      goal: 0,
+      index,
+      tasks: collectTextTasks(element),
       rect: null,
-      leaving: false,
+      status: "empty",
+      progress: 0,
+      eligible: false,
+      inWindow: false,
+      cycle: 0,
+      worker: null,
       bucket: 0,
-      glyphs: [...element.querySelectorAll(".hero-glyph")],
     };
   });
 
-  const cursors = builders.map((builder) => {
-    const element = document.createElement("div");
-    element.className = "agent-cursor";
-    element.style.setProperty("--cursor-color", builder.color);
-    element.innerHTML =
-      '<svg viewBox="0 0 18 23" aria-hidden="true"><path d="M1 1 16 11 9 12 12 19 8 21 5 14 1 18Z"/></svg>';
+  function paintText(task, count) {
+    const next = Math.max(0, Math.min(task.length, Math.floor(count)));
+    if (task.count === next) return;
+    task.count = next;
+    if (task.glyphs) {
+      task.glyphs.forEach((glyph, index) => {
+        glyph.dataset.typed = index < next ? glyph.dataset.char : "";
+      });
+      return;
+    }
+    let remaining = next;
+    task.activeNode = null;
+    for (const record of task.records) {
+      const take = Math.min(remaining, record.text.length);
+      const value =
+        next === task.length ? record.raw : record.text.slice(0, take);
+      if (record.node.data !== value) record.node.data = value;
+      if (take > 0) task.activeNode = record.node;
+      remaining -= take;
+    }
+    task.element.classList.toggle("is-typing", next > 0 && next < task.length);
+  }
+
+  function reserveText(task) {
+    if (!task.glyphs && task.height > 0)
+      task.element.style.minHeight = `${task.height}px`;
+  }
+
+  function releaseText(task) {
+    if (!task.glyphs) {
+      task.element.style.minHeight = task.minHeight;
+      task.element.classList.remove("is-typing");
+    }
+  }
+
+  function measureTextLayout() {
+    // Restore and measure every full string before clearing it. This reserves the
+    // final line wrapping, so actual typing cannot pull the rest of the page up.
+    for (const state of states)
+      for (const task of state.tasks) {
+        paintText(task, task.length);
+        releaseText(task);
+      }
+    for (const state of states)
+      for (const task of state.tasks) {
+        const height = parseFloat(getComputedStyle(task.element).height);
+        task.height = Number.isFinite(height)
+          ? height
+          : task.element.getBoundingClientRect().height;
+      }
+    for (const state of states) {
+      if (state.status === "built") continue;
+      for (const task of state.tasks) {
+        reserveText(task);
+        paintText(task, 0);
+      }
+      if (state.worker) paintTyping(state.worker, state.progress);
+    }
+    reflowNeeded = false;
+  }
+
+  function paintPart(state, p) {
+    state.progress = p;
+    const placed = clamp((p - 0.31) / 0.11);
+    const move = 1 - ease((p - 0.31) / 0.15);
+    const style = state.element.style;
+    style.setProperty("--build-p", p.toFixed(4));
+    style.setProperty("--part-opacity", placed.toFixed(4));
+    style.setProperty("--place-x", `${(-12 * move).toFixed(2)}px`);
+    style.setProperty("--place-y", `${(14 * move).toFixed(2)}px`);
+    style.setProperty(
+      "--path-offset",
+      String((1 - clamp((p - 0.36) / 0.55)) * 450),
+    );
+    // The phase is observable in QA and describes an action, not a scroll mask.
+    state.element.dataset.buildState = state.status;
+    state.element.dataset.buildPhase =
+      p < 0.12
+        ? "approach"
+        : p < 0.31
+          ? "draw"
+          : p < 0.46
+            ? "place"
+            : p < 0.94
+              ? "type"
+              : "settle";
+    const bucket = Math.floor(p * 5);
+    if (bucket !== state.bucket && p > 0.2 && p < 0.98 && state.rect)
+      emitParticles(
+        state.rect,
+        p,
+        style.getPropertyValue("--agent-color"),
+        false,
+      );
+    state.bucket = bucket;
+  }
+
+  const workers = builders.map((builder, index) => {
+    const rig = document.createElement("div");
+    rig.className = "builder-rig";
+    rig.style.setProperty("--worker-color", builder.color);
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.classList.add("builder-guides");
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    svg.append(path);
+    function box(className) {
+      const node = document.createElement("div");
+      node.className = className;
+      const label = document.createElement("span");
+      label.className = "builder-box-label";
+      node.append(label);
+      for (let i = 0; i < 4; i++) {
+        const handle = document.createElement("i");
+        handle.className = `builder-handle handle-${i}`;
+        node.append(handle);
+      }
+      rig.append(node);
+      return { node, label };
+    }
+    rig.append(svg);
+    const frameBox = box("builder-frame-box"),
+      textBox = box("builder-text-box");
+    const caret = document.createElement("span");
+    caret.className = "builder-caret";
+    rig.append(caret);
+    const cursor = document.createElement("div");
+    cursor.className = "agent-cursor builder-cursor";
+    cursor.style.setProperty("--cursor-color", builder.color);
+    cursor.innerHTML =
+      '<svg class="builder-arrow" viewBox="0 0 18 23" aria-hidden="true"><path d="M1 1 16 11 9 12 12 19 8 21 5 14 1 18Z"/></svg><svg class="builder-ibeam" viewBox="0 0 18 23" aria-hidden="true"><path d="M5 3h8M9 3v17M5 20h8"/></svg><span class="builder-click"></span>';
     const name = document.createElement("span");
     name.className = "agent-name";
-    name.textContent = builder.name;
-    element.append(name);
-    agentLayer.append(element);
-    return { element, x: 0, y: 0, visible: false };
+    cursor.append(name);
+    rig.append(cursor);
+    agentLayer.append(rig);
+    return {
+      index,
+      rig,
+      path,
+      frameBox,
+      textBox,
+      caret,
+      cursor,
+      name,
+      state: null,
+      elapsed: 0,
+      duration: 0,
+      textTasks: [],
+      x: 0,
+      y: 0,
+      started: false,
+    };
   });
+
+  function stopWorker(worker) {
+    if (worker.state) worker.state.worker = null;
+    worker.state = null;
+    worker.started = false;
+    worker.rig.classList.remove("is-active");
+    worker.cursor.classList.remove("is-visible", "is-typing", "is-pressed");
+  }
+
+  function emptyState(state) {
+    if (state.worker) stopWorker(state.worker);
+    state.status = "empty";
+    for (const task of state.tasks) {
+      reserveText(task);
+      paintText(task, 0);
+    }
+    paintPart(state, 0);
+  }
+
+  function finishState(state) {
+    if (state.worker)
+      state.element.dataset.buildFinished = performance.now().toFixed(1);
+    if (state.worker) stopWorker(state.worker);
+    state.status = "built";
+    for (const task of state.tasks) {
+      paintText(task, task.length);
+      releaseText(task);
+    }
+    paintPart(state, 1);
+  }
+
+  function beginJob(worker, state) {
+    state.status = "building";
+    state.cycle += 1;
+    state.worker = worker;
+    state.element.dataset.buildCycle = String(state.cycle);
+    state.element.dataset.buildStarted = performance.now().toFixed(1);
+    worker.state = state;
+    worker.elapsed = 0;
+    worker.started = false;
+    const letters = state.tasks.reduce((n, task) => n + task.length, 0);
+    worker.duration = Math.min(
+      1480,
+      Math.max(820, 650 + letters * 1.05 + state.tasks.length * 52),
+    );
+    const budget = worker.duration * 0.48;
+    const weight =
+      state.tasks.reduce((n, task) => n + Math.sqrt(task.length), 0) || 1;
+    const minimum = Math.min(
+      65,
+      (budget / Math.max(1, state.tasks.length)) * 0.6,
+    );
+    const remaining = Math.max(0, budget - minimum * state.tasks.length);
+    let offset = 0;
+    worker.textTasks = state.tasks.map((task) => {
+      const duration = minimum + (remaining * Math.sqrt(task.length)) / weight;
+      const entry = { task, start: offset, duration };
+      offset += duration;
+      return entry;
+    });
+    worker.rig.classList.add("is-active");
+    worker.cursor.classList.add("is-visible");
+    worker.frameBox.label.textContent = `${state.element.dataset.build} / draw frame`;
+    for (const task of state.tasks) {
+      reserveText(task);
+      paintText(task, 0);
+    }
+    paintPart(state, 0);
+  }
+
+  function schedule(time) {
+    if (!motionEnabled || time - bootStarted < 140) return;
+    const count = compactScreen.matches ? 2 : 3;
+    const queue = states.filter(
+      (state) => state.eligible && state.status === "empty",
+    );
+    queue.sort((a, b) => {
+      const aPriority = Math.abs(
+        a.rect.top +
+          Math.min(a.rect.height, innerHeight) * 0.3 -
+          innerHeight * 0.42,
+      );
+      const bPriority = Math.abs(
+        b.rect.top +
+          Math.min(b.rect.height, innerHeight) * 0.3 -
+          innerHeight * 0.42,
+      );
+      // The headline and initial text establish the first scene before details.
+      if (scrollY < 100 && time - bootStarted < 1900) return a.index - b.index;
+      return aPriority - bPriority;
+    });
+    for (const worker of workers) {
+      if (worker.index >= count) {
+        if (worker.state) emptyState(worker.state);
+        continue;
+      }
+      if (!worker.state && queue.length) beginJob(worker, queue.shift());
+    }
+  }
+
+  function paintTyping(worker, p) {
+    const elapsed = clamp((p - 0.46) / 0.48) * worker.duration * 0.48;
+    let active = null;
+    for (const entry of worker.textTasks) {
+      const local = clamp((elapsed - entry.start) / entry.duration);
+      const drag = Math.min(0.32, 48 / entry.duration);
+      const typed = clamp((local - drag) / (1 - drag));
+      paintText(entry.task, Math.floor(typed * entry.task.length));
+      if (local > 0 && local < 1) active = { ...entry, local, drag, typed };
+    }
+    return active;
+  }
+
+  function caretPoint(task) {
+    const box = task.element.getBoundingClientRect();
+    if (task.glyphs) {
+      const glyph =
+        task.glyphs[
+          Math.max(0, Math.min(task.glyphs.length - 1, task.count - 1))
+        ];
+      const rect = glyph.getBoundingClientRect();
+      return {
+        x: task.count ? rect.right : box.left,
+        y: rect.top + rect.height * 0.12,
+        height: Math.min(100, rect.height * 0.7),
+      };
+    }
+    const font = parseFloat(getComputedStyle(task.element).fontSize) || 13;
+    if (task.activeNode && task.activeNode.length) {
+      const range = document.createRange();
+      range.setStart(task.activeNode, task.activeNode.length - 1);
+      range.setEnd(task.activeNode, task.activeNode.length);
+      const rects = range.getClientRects();
+      const rect = rects[rects.length - 1];
+      if (rect && rect.width + rect.height > 0)
+        return {
+          x: rect.right + 1,
+          y: rect.top,
+          height: Math.min(80, rect.height || font),
+        };
+    }
+    return {
+      x: box.left + 2,
+      y: box.top + 3,
+      height: Math.min(80, font * 1.1),
+    };
+  }
+
+  function setBox(box, x, y, width, height, opacity = 1) {
+    box.node.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0)`;
+    box.node.style.width = `${Math.max(1, width).toFixed(1)}px`;
+    box.node.style.height = `${Math.max(1, height).toFixed(1)}px`;
+    box.node.style.opacity = String(opacity);
+  }
+
+  function drawWorker(worker, delta) {
+    const state = worker.state;
+    if (!state) return;
+    const p = state.progress,
+      rect = state.rect;
+    let x = rect.left,
+      y = rect.top,
+      label = "Move to frame",
+      pressed = false,
+      typing = false;
+    worker.caret.style.opacity = "0";
+    worker.textBox.node.style.opacity = "0";
+    worker.path.style.opacity = p < 0.4 ? "1" : "0";
+    worker.path.setAttribute(
+      "d",
+      `M 0 ${rect.top.toFixed(1)} H ${innerWidth} M ${rect.left.toFixed(1)} 78 V ${innerHeight}`,
+    );
+    if (p < 0.12) {
+      const t = ease(p / 0.12);
+      x = mix(rect.left - 34, rect.left, t);
+      y = mix(rect.top - 22, rect.top, t);
+      setBox(worker.frameBox, rect.left, rect.top, 1, 1, t);
+    } else if (p < 0.31) {
+      const t = ease((p - 0.12) / 0.19);
+      x = rect.left + rect.width * t;
+      y = rect.top + rect.height * t;
+      pressed = true;
+      label = "Drag frame";
+      setBox(
+        worker.frameBox,
+        rect.left,
+        rect.top,
+        rect.width * t,
+        rect.height * t,
+        0.9,
+      );
+    } else if (p < 0.46) {
+      const t = ease((p - 0.31) / 0.15);
+      x = rect.left + rect.width * 0.62 - 12 * (1 - t);
+      y = rect.top + 9 + 14 * (1 - t);
+      pressed = true;
+      label = "Place layout";
+      worker.frameBox.label.textContent = `${state.element.dataset.build} / place layout`;
+      setBox(
+        worker.frameBox,
+        rect.left - 12 * (1 - t),
+        rect.top + 14 * (1 - t),
+        rect.width,
+        rect.height,
+        0.75,
+      );
+    } else if (p < 0.94) {
+      setBox(
+        worker.frameBox,
+        rect.left,
+        rect.top,
+        rect.width,
+        rect.height,
+        0.25,
+      );
+      const active = paintTyping(worker, p);
+      if (active) {
+        const host = active.task.element.getBoundingClientRect();
+        if (active.local < active.drag) {
+          const t = ease(active.local / active.drag);
+          x = host.left + host.width * t;
+          y = host.top + host.height * t;
+          pressed = true;
+          label = "Drag text box";
+          setBox(
+            worker.textBox,
+            host.left - 2,
+            host.top - 2,
+            host.width * t + 4,
+            host.height * t + 4,
+            0.9,
+          );
+          worker.textBox.label.textContent = "TEXT / drag to size";
+        } else {
+          const caret = caretPoint(active.task);
+          x = caret.x;
+          y = caret.y + caret.height * 0.5;
+          typing = true;
+          label = "Typing…";
+          setBox(
+            worker.textBox,
+            host.left - 3,
+            host.top - 3,
+            host.width + 6,
+            host.height + 6,
+            0.55,
+          );
+          worker.textBox.label.textContent = `TEXT / ${active.task.count} characters`;
+          worker.caret.style.transform = `translate3d(${caret.x.toFixed(1)}px,${caret.y.toFixed(1)}px,0)`;
+          worker.caret.style.height = `${caret.height.toFixed(1)}px`;
+          worker.caret.style.opacity = "1";
+        }
+      }
+      worker.frameBox.label.textContent = `${state.element.dataset.build} / compose text`;
+    } else {
+      state.tasks.forEach((task) => paintText(task, task.length));
+      const t = clamp((p - 0.94) / 0.06);
+      x = rect.right - 8;
+      y = rect.bottom - 8;
+      label = "Done ✓";
+      setBox(
+        worker.frameBox,
+        rect.left,
+        rect.top,
+        rect.width,
+        rect.height,
+        (1 - t) * 0.45,
+      );
+    }
+    x = Math.max(8, Math.min(innerWidth - 35, x));
+    y = Math.max(83, Math.min(innerHeight - 80, y));
+    const follow = worker.started ? 1 - Math.exp(-delta / 32) : 1;
+    worker.x = mix(worker.x, x, follow);
+    worker.y = mix(worker.y, y, follow);
+    worker.started = true;
+    worker.cursor.style.transform = `translate3d(${worker.x.toFixed(1)}px,${worker.y.toFixed(1)}px,0)`;
+    worker.name.textContent = label;
+    worker.cursor.classList.toggle("is-typing", typing);
+    worker.cursor.classList.toggle("is-pressed", pressed);
+  }
 
   function updateControls() {
     motionButton.setAttribute("aria-pressed", String(motionEnabled));
@@ -122,188 +618,59 @@
       buildDetail.textContent = "All content visible · take your time";
       return;
     }
-    const building = states.some(
-      (state) => state.goal > 0 && state.goal < 0.99 && state.rect?.bottom > 80,
-    );
-    buildStatus.textContent = building
-      ? `BUILDING ${currentSection.dataset.section.toUpperCase()}`
-      : "SCROLL TO BUILD";
-    buildDetail.textContent = "Structure → content · scroll back to rebuild";
+    const active = workers.filter((worker) => worker.state);
+    buildStatus.textContent = active.length
+      ? `COMPOSING ${currentSection.dataset.section.toUpperCase()}`
+      : "READY · SCROLL TO REBUILD";
+    buildDetail.textContent = active.length
+      ? "Draw frame → drag layout → type text"
+      : "Built in place · rebuilds in both directions";
   }
 
   function measure() {
     dirty = false;
+    if (reflowNeeded) measureTextLayout();
     const height = innerHeight;
     const maxScroll = document.documentElement.scrollHeight - height;
     pageProgress = maxScroll > 0 ? clamp(scrollY / maxScroll) : 0;
-    // Read every rectangle first; write visual styles only after measurement.
-    for (const state of states) {
-      const rect = state.element.getBoundingClientRect();
+    // Read layout first; clearing happens only after the element has left view.
+    const measurements = states.map((state) => ({
+      state,
+      rect: state.element.getBoundingClientRect(),
+    }));
+    for (const { state, rect } of measurements) {
       state.rect = rect;
-      const enter = clamp(
-        (height * 0.94 - rect.top) /
-          (height * 0.3 + Math.min(rect.height * 0.24, 100)),
-      );
-      const leave = clamp((rect.bottom - 32) / Math.min(height * 0.12, 85));
-      state.leaving = leave < enter;
-      state.goal =
-        !motionEnabled || state.element === focusedPart
-          ? 1
-          : Math.min(enter, leave);
+      state.inWindow = rect.bottom > -65 && rect.top < height + 65;
+      state.eligible = rect.bottom > 100 && rect.top < height - 48;
     }
-    let nextSection = sections[0];
-    for (const section of sections) {
-      if (section.getBoundingClientRect().top < height * 0.53)
-        nextSection = section;
+    for (const state of states) {
+      if (
+        motionEnabled &&
+        !state.inWindow &&
+        state.status !== "empty" &&
+        !state.element.contains(document.activeElement)
+      )
+        emptyState(state);
     }
-    if (nextSection !== currentSection || !navigationReady) {
+    let next = sections[0];
+    for (const section of sections)
+      if (section.getBoundingClientRect().top < height * 0.52) next = section;
+    if (next !== currentSection || !navigationReady) {
+      currentSection = next;
       navigationReady = true;
-      currentSection = nextSection;
       for (const link of document.querySelectorAll(
         '.site-nav a[href^="#"], .chapter-rail a[href^="#"]',
       )) {
-        const selected = link.getAttribute("href") === `#${currentSection.id}`;
+        const selected = link.getAttribute("href") === `#${next.id}`;
         link.classList.toggle("is-active", selected);
         if (selected) link.setAttribute("aria-current", "location");
         else link.removeAttribute("aria-current");
       }
     }
-    root.classList.toggle(
-      "experience-started",
-      scrollY > height * 0.32 || !motionEnabled,
-    );
     progressLine.style.transform = `scaleX(${pageProgress})`;
     buildProgress.style.transform = `scaleX(${pageProgress})`;
-    introGuide.style.opacity = String(1 - clamp(scrollY / (height * 0.5)));
-    const introProgress = scrollY / height;
-    const introOpacity =
-      clamp((introProgress - 0.015) / 0.13) *
-      clamp((0.55 - introProgress) / 0.2);
-    introScript.style.opacity = motionEnabled ? String(introOpacity) : "0";
-    introScript.style.transform = `translate3d(0,${-introProgress * 70}px,0) scale(${1.08 - Math.min(1, introProgress) * 0.11})`;
     if (ribbon)
       ribbon.style.transform = `translate3d(${-(scrollY * 0.1)}px,0,0)`;
-    updateControls();
-  }
-
-  function paintPart(state) {
-    const p = state.progress;
-    state.element.style.setProperty("--build-p", p.toFixed(4));
-    const bucket = Math.floor(p * 5);
-    if (bucket !== state.bucket && state.rect) {
-      if (p > 0.1 && p < 0.98)
-        emitParticles(
-          state.rect,
-          p,
-          state.element.style.getPropertyValue("--agent-color"),
-          state.leaving,
-        );
-      state.bucket = bucket;
-    }
-    if (state.glyphs.length)
-      state.glyphs.forEach((glyph, index) => {
-        const local = clamp((p - 0.05 - index * 0.025) / 0.65);
-        glyph.style.setProperty("--glyph-opacity", String(clamp(local * 3)));
-        glyph.style.setProperty("--glyph-y", `${(1 - local) * 40}px`);
-        glyph.style.setProperty("--glyph-angle", `${(1 - local) * 65}deg`);
-        glyph.style.setProperty("--glyph-fill", `${(1 - local) * 100}%`);
-      });
-    state.element.style.setProperty(
-      "--path-offset",
-      `${(1 - clamp((p - 0.25) / 0.65)) * 450}`,
-    );
-    const content = clamp((p - 0.21) / 0.65);
-    const smoothContent = content * content * (3 - 2 * content);
-    const outline = Math.min(clamp(p / 0.15), clamp((1 - p) / 0.14));
-    const style = state.element.style;
-    style.setProperty("--part-opacity", clamp(p / 0.07).toFixed(4));
-    style.setProperty("--content-opacity", smoothContent.toFixed(4));
-    style.setProperty("--content-clip", `${((1 - content) * 100).toFixed(2)}%`);
-    style.setProperty(
-      "--content-offset",
-      `${((1 - content) * 9).toFixed(2)}px`,
-    );
-    style.setProperty("--content-blur", `${((1 - content) * 2).toFixed(2)}px`);
-    style.setProperty("--frame-opacity", outline.toFixed(4));
-    style.setProperty(
-      "--wire-clip",
-      `${((1 - clamp(p / 0.24)) * 100).toFixed(2)}%`,
-    );
-    style.setProperty("--scan-x", `${(content * 100).toFixed(2)}%`);
-    state.element.dataset.buildState =
-      p < 0.01
-        ? "empty"
-        : p > 0.99
-          ? "built"
-          : state.leaving
-            ? "clearing"
-            : "building";
-    state.label.textContent = `${state.element.dataset.build} / ${state.leaving ? "clearing" : p < 0.3 ? "structure" : "assembling"}`;
-  }
-
-  function drawBuilders(time, delta) {
-    // Builders visit the structure itself. No pointer listener, cursor trail,
-    // idle flock, or relationship to the visitor's mouse position is used.
-    const working = motionEnabled && time - lastScroll < 850;
-    const targets = states.filter(
-      (state) =>
-        state.rect &&
-        state.rect.bottom > 100 &&
-        state.rect.top < innerHeight - 100 &&
-        state.progress > 0.025 &&
-        state.progress < 0.98,
-    );
-    targets.sort(
-      (a, b) =>
-        Math.abs(a.rect.top + a.rect.height / 2 - innerHeight * 0.57) -
-        Math.abs(b.rect.top + b.rect.height / 2 - innerHeight * 0.57),
-    );
-    const count = compactScreen.matches ? 1 : 3;
-    for (let index = 0; index < cursors.length; index++) {
-      const cursor = cursors[index];
-      const target = targets[index];
-      const visible = working && index < count && Boolean(target);
-      if (visible) {
-        const rect = target.rect;
-        const p = target.progress;
-        const t = clamp(p / 0.28) * 4;
-        let x, y;
-        if (p < 0.28) {
-          if (t < 1) {
-            x = rect.left + rect.width * t;
-            y = rect.top;
-          } else if (t < 2) {
-            x = rect.right;
-            y = rect.top + rect.height * (t - 1);
-          } else if (t < 3) {
-            x = rect.right - rect.width * (t - 2);
-            y = rect.bottom;
-          } else {
-            x = rect.left;
-            y = rect.bottom - rect.height * (t - 3);
-          }
-        } else {
-          const content = clamp((p - 0.21) / 0.65);
-          x = rect.left + rect.width * content;
-          y = rect.top + rect.height * (0.3 + content * 0.4);
-        }
-        x = Math.max(10, Math.min(innerWidth - 60, x));
-        y = Math.max(90, Math.min(innerHeight - 110, y));
-        const ease = 1 - Math.exp(-delta / 75);
-        if (!cursor.visible) {
-          cursor.x = x;
-          cursor.y = y;
-        }
-        cursor.x += (x - cursor.x) * ease;
-        cursor.y += (y - cursor.y) * ease;
-        cursor.element.style.transform = `translate3d(${cursor.x.toFixed(1)}px,${cursor.y.toFixed(1)}px,0)`;
-      }
-      if (visible !== cursor.visible) {
-        cursor.visible = visible;
-        cursor.element.classList.toggle("is-visible", visible);
-      }
-    }
-    return working;
   }
 
   function render(time) {
@@ -312,21 +679,32 @@
     const delta = previousTime ? Math.min(50, time - previousTime) : 16;
     previousTime = time;
     if (dirty) measure();
-    const ease = motionEnabled ? 1 - Math.exp(-delta / 92) : 1;
-    moving = false;
-    for (const state of states) {
-      const difference = state.goal - state.progress;
-      if (Math.abs(difference) > 0.001) {
-        state.progress += difference * ease;
-        moving = true;
-        paintPart(state);
-      } else if (state.progress !== state.goal) {
-        state.progress = state.goal;
-        paintPart(state);
-      }
+    const boot = clamp((time - bootStarted) / 1500);
+    root.style.setProperty("--boot-p", String(motionEnabled ? boot : 1));
+    root.classList.toggle(
+      "experience-started",
+      !motionEnabled || time - bootStarted > 300,
+    );
+    schedule(time);
+    const rate = 1 + Math.min(0.7, scrollSpeed / 2400);
+    let active = false;
+    for (const worker of workers) {
+      if (!worker.state) continue;
+      active = true;
+      worker.elapsed += delta * rate;
+      const state = worker.state,
+        p = clamp(worker.elapsed / worker.duration);
+      paintPart(state, p);
+      drawWorker(worker, delta);
+      if (p >= 1) finishState(state);
     }
-    const buildersWorking = drawBuilders(time, delta);
-    if (moving || buildersWorking) frame = requestAnimationFrame(render);
+    scrollSpeed *= 0.9;
+    updateControls();
+    const waiting =
+      motionEnabled &&
+      states.some((state) => state.eligible && state.status === "empty");
+    if (active || waiting || (motionEnabled && boot < 1))
+      frame = requestAnimationFrame(render);
   }
 
   function wake() {
@@ -339,7 +717,6 @@
     dirty = true;
     wake();
   }
-
   function setMotion(enabled, remember = false) {
     motionEnabled = enabled && !reducedMotion.matches;
     root.classList.toggle("motion-enabled", motionEnabled);
@@ -349,14 +726,14 @@
       try {
         localStorage.setItem("hopezaa-motion", preference);
       } catch (_) {
-        /* Optional preference. */
+        /* Optional. */
       }
     }
-    // Every visual is visible immediately in the accessible motion-off mode.
-    for (const state of states) {
-      state.progress = motionEnabled ? 0 : 1;
-      paintPart(state);
-    }
+    workers.forEach(stopWorker);
+    if (motionEnabled) {
+      bootStarted = performance.now();
+      states.forEach(emptyState);
+    } else states.forEach(finishState);
     requestUpdate();
     updateControls();
   }
@@ -364,12 +741,27 @@
   window.addEventListener(
     "scroll",
     () => {
-      lastScroll = performance.now();
+      const now = performance.now();
+      scrollSpeed = Math.min(
+        4000,
+        (Math.abs(scrollY - lastScrollPosition) /
+          Math.max(16, now - lastScrollSample)) *
+          1000,
+      );
+      lastScrollPosition = scrollY;
+      lastScrollSample = now;
       requestUpdate();
     },
     { passive: true },
   );
-  window.addEventListener("resize", requestUpdate, { passive: true });
+  window.addEventListener(
+    "resize",
+    () => {
+      reflowNeeded = true;
+      requestUpdate();
+    },
+    { passive: true },
+  );
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       cancelAnimationFrame(frame);
@@ -386,11 +778,8 @@
   });
   replayButton.addEventListener("click", () => {
     if (!motionEnabled) return;
-    for (const state of states) {
-      state.progress = 0;
-      paintPart(state);
-    }
-    lastScroll = performance.now();
+    states.filter((state) => state.inWindow).forEach(emptyState);
+    bootStarted = performance.now() - 150;
     requestUpdate();
   });
   reducedMotion.addEventListener("change", () =>
@@ -439,8 +828,8 @@
       event.altKey
     )
       return;
-    const hash = anchor.getAttribute("href");
-    const target = document.getElementById(hash.slice(1));
+    const hash = anchor.getAttribute("href"),
+      target = document.getElementById(hash.slice(1));
     if (!target) return;
     event.preventDefault();
     if (location.hash !== hash) history.pushState(null, "", hash);
@@ -456,22 +845,21 @@
     const target = document.getElementById(location.hash.slice(1));
     if (target) visitSection(target, "instant");
   });
-  compactScreen.addEventListener("change", () => closeMenu());
-  document.addEventListener("focusin", (event) => {
-    focusedPart = event.target.closest("[data-build]");
-    const state = states.find((item) => item.element === focusedPart);
-    if (state) {
-      state.progress = 1;
-      paintPart(state);
-    }
+  compactScreen.addEventListener("change", () => {
+    closeMenu();
+    reflowNeeded = true;
     requestUpdate();
   });
-  document.addEventListener("focusout", () => {
-    focusedPart = null;
-    requestUpdate();
+  document.addEventListener("focusin", (event) => {
+    const element = event.target.closest("[data-build]"),
+      state = states.find((item) => item.element === element);
+    if (state && state.status !== "built") finishState(state);
   });
 
+  measureTextLayout();
   setMotion(motionEnabled);
+  root.dataset.builderReady = "true";
+  root.classList.remove("builder-pending");
 
   function createVisualScene() {
     const canvas = document.getElementById("scene-canvas");
@@ -591,7 +979,10 @@
 
     function drawWorld(time, delta) {
       context.clearRect(0, 0, width, height);
-      const intro = scrollY / height;
+      const intro = Math.max(
+        scrollY / height,
+        Number(root.style.getPropertyValue("--boot-p")) * 0.72,
+      );
       const presence = motionEnabled ? clamp(intro * 3) : 0.3;
       if (presence < 0.002) return;
       const glow = context.createRadialGradient(
