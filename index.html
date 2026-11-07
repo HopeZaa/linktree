@@ -3,354 +3,662 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="theme-color" content="#0a0a0b" />
     <meta
       name="description"
-      content="HopeZaa personal parallax website for Sirawich Roopngam."
+      content="HopeZaa — Sirawich Roopngam. Chulalongkorn University student [CEDT 04]. Code, creative interfaces, and technical projects."
     />
-    <title>HopeZaa</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="icon" href="https://i.postimg.cc/J0LWpzZm/Hope-Zaa-Favicon.png" type="image/png">
+    <title>HopeZaa — Sirawich Roopngam</title>
+    <link
+      rel="icon"
+      href="https://i.postimg.cc/J0LWpzZm/Hope-Zaa-Favicon.png"
+      type="image/png"
+    />
+    <script>
+      document.documentElement.classList.add("js");
+    </script>
+    <link rel="stylesheet" href="styles.css?v=20261107-scroll-2" />
+    <script src="script.js?v=20261107-scroll-2" defer></script>
   </head>
   <body>
-    <div class="loader" id="loader" aria-label="Loading HopeZaa website">
-      <div class="loader-grid"></div>
-      <div class="loader-core">
-        <p class="loader-kicker">Initializing</p>
-        <h1>HopeZaa</h1>
-        <div class="loader-line" aria-hidden="true"><span></span></div>
-      </div>
-      <p class="loader-hint">Tip — hover the logo once you're in</p>
+    <a class="skip-link" href="#home">Skip to content</a>
+    <div class="page-progress" aria-hidden="true">
+      <span id="page-progress"></span>
     </div>
 
-    <canvas id="ambient-canvas" aria-hidden="true"></canvas>
-
-    <header class="site-header" aria-label="Site header">
-      <div class="brand-dock">
-        <a class="brand" href="#home" aria-label="HopeZaa home">
-          <span class="brand-mark">HZ</span>
-          <span>HopeZaa</span>
-        </a>
-        <div class="brand-hint" id="brand-hint" role="status" aria-live="polite">
-          <span>Hover here</span> to explore
-        </div>
-        <nav class="topic-nav" aria-label="Topics">
-          <div class="topic-nav-bar" aria-hidden="true">
-            <span>root@hopezaa:~$</span>
-            <strong>topics</strong>
-          </div>
-          <ul>
-            <li style="--topic-delay: 90ms">
-              <a href="#home"><span aria-hidden="true">&gt;&gt;</span> Personal Interface</a>
-            </li>
-            <li style="--topic-delay: 158ms">
-              <a href="#skills"><span aria-hidden="true">&gt;&gt;</span> Skill Stack</a>
-            </li>
-            <li style="--topic-delay: 226ms">
-              <a href="#profile"><span aria-hidden="true">&gt;&gt;</span> Personal History</a>
-            </li>
-            <li style="--topic-delay: 294ms">
-              <a href="#motto"><span aria-hidden="true">&gt;&gt;</span> Motto</a>
-            </li>
-            <li style="--topic-delay: 362ms">
-              <a href="#contact"><span aria-hidden="true">&gt;&gt;</span> Contact</a>
-            </li>
-            <li style="--topic-delay: 430ms">
-              <a href="#achievement"><span aria-hidden="true">&gt;&gt;</span> Achievement</a>
-            </li>
-            <li style="--topic-delay: 498ms">
-              <a href="#music"><span aria-hidden="true">&gt;&gt;</span> Other</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      <div class="scroll-meter" aria-hidden="true"><span></span></div>
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="HopeZaa home"
+        ><span class="brand-mark">HZ<span>↗</span></span
+        ><span>HOPEZAA<span class="brand-period">.</span></span></a
+      >
+      <button
+        class="menu-toggle"
+        id="menu-toggle"
+        type="button"
+        aria-controls="site-nav"
+        aria-expanded="false"
+        aria-label="Open navigation"
+      >
+        <span></span><span></span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+        <a href="#profile">About</a><a href="#skills">Skills</a
+        ><a href="#achievement">Selected work</a><a href="#motto">Motto</a
+        ><a href="#music">Audio</a
+        ><a class="nav-contact" href="#contact"
+          >Let’s talk <span aria-hidden="true">↗</span></a
+        >
+      </nav>
     </header>
 
-    <main>
-      <section class="hero panel" id="home" data-section>
-        <div class="hero-orbit" aria-hidden="true">
-          <span></span>
-          <span></span>
-          <span></span>
+    <main id="main">
+      <section class="intro-stage" aria-label="Scroll to build the website">
+        <div class="intro-grid" aria-hidden="true">
+          <span class="intro-cross intro-cross-one">+</span
+          ><span class="intro-cross intro-cross-two">+</span>
         </div>
-        <div class="hero-content reveal">
-          <p class="eyebrow">Personal Interface</p>
-          <h2>Welcome to HopeZaa Website</h2>
-          <p class="hero-copy">
-            Chulalongkorn University student
-            [CEDT 04]
-          </p>
+        <a class="intro-guide mono" href="#home"
+          ><span class="intro-line" aria-hidden="true"></span>SCROLL TO
+          BUILD<span aria-hidden="true">↓</span></a
+        >
+      </section>
+      <section
+        class="hero section-wrap"
+        id="home"
+        data-section="Personal Interface"
+      >
+        <div class="hero-topline mono" data-build="Layout">
+          <span><i class="status-dot"></i> Personal Interface</span
+          ><span>Code. Create. Keep going.</span>
         </div>
-        <div class="hero-console reveal" aria-label="Profile status">
-          <div class="console-bar">
-            <span></span>
-            <span></span>
-            <span></span>
+        <h1 class="hero-title" data-build="Typography">
+          PORTFOLIO<span class="title-star" aria-hidden="true">✳</span>
+        </h1>
+        <div class="hero-grid">
+          <div class="hero-intro" data-build="Typography">
+            <p class="handwritten">Hello, I’m</p>
+            <h2><span class="name-label">HOPEZAA.</span></h2>
+            <p class="role-tag mono">
+              <span class="red-square"></span> Student &amp; developer
+            </p>
+            <p class="hero-welcome">Welcome to HopeZaa Website</p>
+            <p class="hero-description">
+              Chulalongkorn University student<br /><span class="red-text"
+                >[CEDT 04]</span
+              >
+            </p>
+            <div class="hero-actions">
+              <a class="button button-red" href="#achievement"
+                >Explore my work <span aria-hidden="true">↗</span></a
+              ><a class="text-link" href="#profile"
+                >A little about me <span aria-hidden="true">↓</span></a
+              >
+            </div>
           </div>
-          <pre><code>const profile = {
-  handle: "HopeZaa",
-  focus: "Coding",
-  mode: "Parallax"
+          <div class="identity-card" data-build="Visuals">
+            <div class="identity-top mono">
+              <span>01 / THE PERSON</span><span aria-hidden="true">↗</span>
+            </div>
+            <div class="identity-art" aria-hidden="true">
+              <div class="art-grid"></div>
+              <span class="identity-outline">HZ</span
+              ><span class="identity-solid">HZ<span>.</span></span>
+              <div class="art-cross cross-one">+</div>
+              <div class="art-cross cross-two">+</div>
+              <span class="art-coordinate mono">CODE / CREATE / REPEAT</span>
+            </div>
+            <div class="identity-bottom">
+              <strong>Sirawich Roopngam</strong
+              ><span class="mono">Coding, Gaming</span>
+            </div>
+          </div>
+          <aside
+            class="hero-aside"
+            data-build="Details"
+            aria-label="Profile status"
+          >
+            <div class="aside-heading mono">
+              <span><i class="status-dot"></i> PROFILE ONLINE</span
+              ><span>↗</span>
+            </div>
+            <h3>Always curious.<br />Always building.</h3>
+            <p>
+              A developer-minded student focused on code, creative interfaces,
+              and technical projects that feel polished from the first
+              interaction.
+            </p>
+            <div class="profile-console">
+              <div class="console-heading mono">
+                <span>profile.js</span><span>JS</span>
+              </div>
+              <pre><code><span class="code-purple">const</span> profile = {
+  handle: <span class="code-green">"HopeZaa"</span>,
+  focus: <span class="code-green">"Coding"</span>,
+  mode: <span class="code-green">"Parallax"</span>
 };</code></pre>
-        </div>
-      </section>
-
-      <section class="horizontal-stage skills-stage" id="skills" data-horizontal>
-        <div class="sticky-wrap">
-          <div class="stage-meta reveal">
-            <p class="eyebrow">Skill Stack</p>
-            <h2>Scroll Through Capability</h2>
-          </div>
-          <div class="horizontal-track" data-track>
-            <article class="h-card skill-card">
-              <p class="card-number">01</p>
-              <h3>Coding &amp; Front-End Web Development</h3>
-              <p>
-                Building responsive interfaces with motion, structure, and clean
-                interaction flow.
-              </p>
-            </article>
-            <article class="h-card skill-card">
-              <p class="card-number">02</p>
-              <h3>Proficient in C, C++, Python</h3>
-              <p>
-                Comfortable with fundamentals, algorithms, problem solving, and
-                practical automation.
-              </p>
-            </article>
-            <article class="h-card skill-card">
-              <p class="card-number">03</p>
-              <h3>Sufficient in C#, CSS, HTML, JavaScript</h3>
-              <p>
-                Able to shape visual interfaces, write web logic, and connect
-                ideas into working products.
-              </p>
-            </article>
-            <article class="h-card skill-card">
-              <p class="card-number">04</p>
-              <h3>IoT Projects</h3>
-              <p>
-                Exploring connected devices, sensors, embedded logic, and
-                real-world automation.
-              </p>
-            </article>
-          </div>
-          <div class="stage-progress" aria-hidden="true"><span></span></div>
-        </div>
-      </section>
-
-      <section class="profile panel" id="profile" data-section>
-        <div class="profile-copy reveal">
-          <p class="eyebrow">Personal History</p>
-          <h2>Sirawich Roopngam</h2>
-          <p>
-            A developer-minded student focused on code, creative interfaces, and
-            technical projects that feel polished from the first interaction.
-          </p>
-        </div>
-        <div class="profile-grid reveal">
-          <div class="profile-item">
-            <span>Name</span>
-            <strong>Sirawich Roopngam</strong>
-          </div>
-          <div class="profile-item">
-            <span>Study</span>
-            <strong>Chulalongkorn University</strong>
-          </div>
-          <div class="profile-item">
-            <span>Birth</span>
-            <strong>26 / 07 / 2007</strong>
-          </div>
-          <div class="profile-item">
-            <span>Religion</span>
-            <strong>Buddhism</strong>
-          </div>
-          <div class="profile-item wide">
-            <span>Hobby</span>
-            <strong>Coding, Gaming</strong>
-          </div>
-        </div>
-      </section>
-
-      <section class="motto-stage" id="motto" data-motto>
-        <div class="motto-sticky">
-          <div class="gold-field" aria-hidden="true"></div>
-          <p class="eyebrow">Motto</p>
-          <blockquote>
-            "Effort has never hurt anyone who is determined."
-          </blockquote>
-        </div>
-      </section>
-
-      <section class="contact panel" id="contact" data-section>
-        <div class="contact-intro reveal">
-          <p class="eyebrow">Contact</p>
-          <h2>Connect With HopeZaa</h2>
-        </div>
-        <div class="contact-grid reveal">
-          <a class="contact-link" href="https://github.com/HopeZaa" target="_blank" rel="noreferrer">
-            <span class="contact-code">GH</span>
-            <strong>GitHub</strong>
-            <small>github.com/HopeZaa</small>
-          </a>
-          <a class="contact-link" href="https://mail.google.com/mail/u/0/?fs=1&amp;to=hoperoopngam@gmail.com&amp;tf=cm" target="_blank" rel="noreferrer">
-            <span class="contact-code">GM</span>
-            <strong>Gmail</strong>
-            <small>hoperoopngam@gmail.com</small>
-          </a>
-          <a class="contact-link" href="https://web.facebook.com/im.hxpe/?_rdc=1&amp;_rdr#" target="_blank" rel="noreferrer">
-            <span class="contact-code">FB</span>
-            <strong>Facebook</strong>
-            <small>im.hxpe</small>
-          </a>
-          <a class="contact-link" href="https://www.instagram.com/im._hxpe/" target="_blank" rel="noreferrer">
-            <span class="contact-code">IG</span>
-            <strong>Instagram</strong>
-            <small>im._hxpe</small>
-          </a>
-        </div>
-      </section>
-
-      <section class="horizontal-stage achievement-stage" id="achievement" data-horizontal>
-        <div class="sticky-wrap">
-          <div class="stage-meta reveal">
-            <p class="eyebrow">Achievement</p>
-            <h2>Selected Links</h2>
-          </div>
-          <div class="horizontal-track achievement-track" data-track>
+            </div>
             <a
-              class="h-card achievement-card"
-              href="https://hopezaa.github.io/Portfolio/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <p class="card-number">01</p>
-              <h3>Portfolio</h3>
-              <p>Open the portfolio showcase.</p>
-              <span class="card-action">Open Project</span>
-            </a>
-            <a
-              class="h-card achievement-card"
-              href="https://www.borntodev.com/devlab/profile/66665"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <p class="card-number">02</p>
-              <h3>Devlab</h3>
-              <p>View the BornToDev Devlab profile.</p>
-              <span class="card-action">Open Profile</span>
-            </a>
-            <a
-              class="h-card achievement-card"
+              class="aside-link mono"
               href="https://github.com/HopeZaa"
               target="_blank"
               rel="noreferrer"
+              >GITHUB / HOPEZAA <span aria-hidden="true">↗</span></a
             >
-              <p class="card-number">03</p>
-              <h3>GitHub</h3>
-              <p>View the HopeZaa GitHub profile.</p>
-              <span class="card-action">Open GitHub</span>
-            </a>
-            <a
-              class="h-card achievement-card"
-              href="https://comprog-cal.vercel.app/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <p class="card-number">04</p>
-              <h3>ComProg-Cal</h3>
-              <p>Explore the ComProg-Cal project.</p>
-              <span class="card-action">Open Project</span>
-            </a>
-            <a
-              class="h-card achievement-card"
-              href="https://cu-gate.vercel.app/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <p class="card-number">05</p>
-              <h3>CU-Gate</h3>
-              <p>Explore the CU-Gate project.</p>
-              <span class="card-action">Open Project</span>
-            </a>
-            <a
-              class="h-card achievement-card"
-              href="https://github.com/HopeZaa/Graph_Algo"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <p class="card-number">06</p>
-              <h3>Graph-Algo</h3>
-              <p>View the Graph-Algo repository on GitHub.</p>
-              <span class="card-action">Open Repository</span>
-            </a>
-            <a
-              class="h-card achievement-card"
-              href="https://cu-borrow.vercel.app/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <p class="card-number">07</p>
-              <h3>CU-Borrow</h3>
-              <p>Explore the CU-Borrow project.</p>
-              <span class="card-action">Open Project</span>
-            </a>
-            <a
-              class="h-card achievement-card"
-              href="https://algorithm-hopezaa.vercel.app/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <p class="card-number">08</p>
-              <h3>Algorithm</h3>
-              <p>Explore the Algorithm project.</p>
-              <span class="card-action">Open Project</span>
-            </a>
+          </aside>
+        </div>
+        <div class="hero-bottom" data-build="Details">
+          <div>
+            <strong>CEDT <span>04</span></strong
+            ><small>Chulalongkorn University</small>
           </div>
-          <div class="stage-progress" aria-hidden="true"><span></span></div>
+          <div>
+            <strong>C / C++ / Python</strong
+            ><small>Core programming languages</small>
+          </div>
+          <div>
+            <strong>08 <span>selected links</span></strong
+            ><small>Projects &amp; achievements</small>
+          </div>
+          <a class="scroll-cue mono" href="#profile"
+            ><span class="scroll-cue-icon" aria-hidden="true">↓</span> SCROLL TO
+            ASSEMBLE</a
+          >
         </div>
       </section>
 
-      <section class="music panel" id="music" data-section>
-        <div class="music-shell reveal">
-          <div class="music-copy">
-            <p class="eyebrow">Audio Room</p>
-            <h2>YouTube Playlist Player</h2>
-            <p id="track-name">HopeZaa Playlist</p>
+      <section
+        class="about section-wrap content-section"
+        id="profile"
+        data-section="Personal History"
+      >
+        <div class="section-heading" data-build="Typography">
+          <div>
+            <p class="eyebrow"><span>01 /</span> Personal History</p>
+            <h2>The person<br />behind the <em>code.</em></h2>
           </div>
-          <div class="youtube-player-wrap">
-            <div id="youtube-player" aria-label="YouTube playlist player"></div>
+          <p class="section-note">
+            A little background.<br />A lot of curiosity.
+          </p>
+        </div>
+        <div class="about-layout">
+          <div class="about-statement" data-build="Layout">
+            <span class="oversized-mark" aria-hidden="true">↳</span>
+            <h3>Sirawich<br />Roopngam<span class="red-text">.</span></h3>
+            <p>
+              A developer-minded student focused on code, creative interfaces,
+              and technical projects that feel polished from the first
+              interaction.
+            </p>
+            <a class="text-link" href="#contact"
+              >Connect With HopeZaa <span aria-hidden="true">↗</span></a
+            >
           </div>
-          <div class="visualizer" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
+          <dl class="profile-details" data-build="Details">
+            <div>
+              <dt><span>01</span> Name</dt>
+              <dd>Sirawich Roopngam</dd>
+            </div>
+            <div>
+              <dt><span>02</span> Study</dt>
+              <dd>
+                Chulalongkorn University
+                <span class="inline-note">[CEDT 04]</span>
+              </dd>
+            </div>
+            <div>
+              <dt><span>03</span> Birth</dt>
+              <dd>26 / 07 / 2007</dd>
+            </div>
+            <div>
+              <dt><span>04</span> Religion</dt>
+              <dd>Buddhism</dd>
+            </div>
+            <div>
+              <dt><span>05</span> Hobby</dt>
+              <dd>Coding, Gaming</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section
+        class="skills section-wrap content-section"
+        id="skills"
+        data-section="Skill Stack"
+      >
+        <div class="section-heading" data-build="Typography">
+          <div>
+            <p class="eyebrow"><span>02 /</span> Skill Stack</p>
+            <h2>Built on <em>curiosity.</em></h2>
           </div>
-          <div class="player-controls" aria-label="Music player controls">
-            <button type="button" class="control-btn" id="prev-track" aria-label="Previous track">
-              Prev
-            </button>
-            <button type="button" class="control-btn primary" id="play-toggle" aria-label="Play music">
-              Play
-            </button>
-            <button type="button" class="control-btn" id="next-track" aria-label="Next track">
-              Next
-            </button>
+          <p class="section-note">Scroll Through Capability</p>
+        </div>
+        <div class="section-rule mono" data-build="Details">
+          <span>THE TOOLKIT</span
+          ><span>FUNDAMENTALS → INTERFACES → REAL WORLD</span>
+        </div>
+        <div class="skills-grid">
+          <article class="skill-card" data-build="Layout">
+            <div class="card-top mono">
+              <span>01 / WEB</span
+              ><span class="card-icon" aria-hidden="true">&lt;/&gt;</span>
+            </div>
+            <h3>Coding &amp; Front-End Web Development</h3>
+            <p>
+              Building responsive interfaces with motion, structure, and clean
+              interaction flow.
+            </p>
+            <div class="tag-row">
+              <span>Responsive UI</span><span>Interaction</span>
+            </div>
+          </article>
+          <article class="skill-card" data-build="Typography">
+            <div class="card-top mono">
+              <span>02 / CORE</span
+              ><span class="card-icon" aria-hidden="true">{ }</span>
+            </div>
+            <h3>Proficient in C, C++, Python</h3>
+            <p>
+              Comfortable with fundamentals, algorithms, problem solving, and
+              practical automation.
+            </p>
+            <div class="tag-row">
+              <span>C</span><span>C++</span><span>Python</span>
+            </div>
+          </article>
+          <article class="skill-card" data-build="Details">
+            <div class="card-top mono">
+              <span>03 / STACK</span
+              ><span class="card-icon" aria-hidden="true">⌘</span>
+            </div>
+            <h3>Sufficient in C#, CSS, HTML, JavaScript</h3>
+            <p>
+              Able to shape visual interfaces, write web logic, and connect
+              ideas into working products.
+            </p>
+            <div class="tag-row">
+              <span>C#</span><span>CSS</span><span>HTML</span><span>JS</span>
+            </div>
+          </article>
+          <article class="skill-card" data-build="Visuals">
+            <div class="card-top mono">
+              <span>04 / HARDWARE</span
+              ><span class="card-icon" aria-hidden="true">⌁</span>
+            </div>
+            <h3>IoT Projects</h3>
+            <p>
+              Exploring connected devices, sensors, embedded logic, and
+              real-world automation.
+            </p>
+            <div class="tag-row"><span>IoT</span><span>Automation</span></div>
+          </article>
+        </div>
+      </section>
+
+      <section
+        class="work section-wrap content-section"
+        id="achievement"
+        data-section="Achievement"
+      >
+        <div class="section-heading" data-build="Typography">
+          <div>
+            <p class="eyebrow">
+              <span>03 /</span> Achievement · Selected Links
+            </p>
+            <h2>Ideas into<br /><em>something real.</em></h2>
           </div>
-          <label class="volume-control" for="volume">
-            <span>Volume</span>
-            <input id="volume" type="range" min="0" max="100" value="45" />
-          </label>
+          <p class="section-note">
+            A collection of projects,<br />experiments &amp; progress.
+          </p>
+        </div>
+        <div class="featured-work" data-build="Visuals">
+          <a
+            class="featured-art"
+            href="https://hopezaa.github.io/Portfolio/"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Open Portfolio"
+            ><div class="portfolio-art" aria-hidden="true">
+              <span class="art-overline mono">HOPEZAA / SELECTED WORK</span
+              ><span class="portfolio-art-title">MAKE<br /><i>IT REAL.</i></span
+              ><span class="art-code mono"
+                >&lt;ideas&gt; → &lt;experiences&gt;</span
+              ><span class="art-arrow">↗</span>
+            </div></a
+          >
+          <div class="featured-copy">
+            <p class="eyebrow">01 / Featured</p>
+            <h3>Portfolio<span class="red-text">.</span></h3>
+            <p>Open the portfolio showcase.</p>
+            <a
+              class="button button-outline"
+              href="https://hopezaa.github.io/Portfolio/"
+              target="_blank"
+              rel="noreferrer"
+              >Open Project <span aria-hidden="true">↗</span></a
+            ><span class="featured-footnote mono"
+              >THE COLLECTION / HOPEZAA</span
+            >
+          </div>
+        </div>
+        <div class="work-list">
+          <a
+            class="project-row"
+            data-build="Layout"
+            href="https://www.borntodev.com/devlab/profile/66665"
+            target="_blank"
+            rel="noreferrer"
+            ><span class="project-number mono">02</span>
+            <div class="project-name">
+              <h3>Devlab</h3>
+              <p>View the BornToDev Devlab profile.</p>
+            </div>
+            <span class="project-type mono">Open Profile</span
+            ><span class="project-arrow" aria-hidden="true">↗</span></a
+          >
+          <a
+            class="project-row"
+            data-build="Details"
+            href="https://github.com/HopeZaa"
+            target="_blank"
+            rel="noreferrer"
+            ><span class="project-number mono">03</span>
+            <div class="project-name">
+              <h3>GitHub</h3>
+              <p>View the HopeZaa GitHub profile.</p>
+            </div>
+            <span class="project-type mono">Open GitHub</span
+            ><span class="project-arrow" aria-hidden="true">↗</span></a
+          >
+          <a
+            class="project-row"
+            data-build="Layout"
+            href="https://comprog-cal.vercel.app/"
+            target="_blank"
+            rel="noreferrer"
+            ><span class="project-number mono">04</span>
+            <div class="project-name">
+              <h3>ComProg-Cal</h3>
+              <p>Explore the ComProg-Cal project.</p>
+            </div>
+            <span class="project-type mono">Open Project</span
+            ><span class="project-arrow" aria-hidden="true">↗</span></a
+          >
+          <a
+            class="project-row"
+            data-build="Typography"
+            href="https://cu-gate.vercel.app/"
+            target="_blank"
+            rel="noreferrer"
+            ><span class="project-number mono">05</span>
+            <div class="project-name">
+              <h3>CU-Gate</h3>
+              <p>Explore the CU-Gate project.</p>
+            </div>
+            <span class="project-type mono">Open Project</span
+            ><span class="project-arrow" aria-hidden="true">↗</span></a
+          >
+          <a
+            class="project-row"
+            data-build="Details"
+            href="https://github.com/HopeZaa/Graph_Algo"
+            target="_blank"
+            rel="noreferrer"
+            ><span class="project-number mono">06</span>
+            <div class="project-name">
+              <h3>Graph-Algo</h3>
+              <p>View the Graph-Algo repository on GitHub.</p>
+            </div>
+            <span class="project-type mono">Open Repository</span
+            ><span class="project-arrow" aria-hidden="true">↗</span></a
+          >
+          <a
+            class="project-row"
+            data-build="Visuals"
+            href="https://cu-borrow.vercel.app/"
+            target="_blank"
+            rel="noreferrer"
+            ><span class="project-number mono">07</span>
+            <div class="project-name">
+              <h3>CU-Borrow</h3>
+              <p>Explore the CU-Borrow project.</p>
+            </div>
+            <span class="project-type mono">Open Project</span
+            ><span class="project-arrow" aria-hidden="true">↗</span></a
+          >
+          <a
+            class="project-row"
+            data-build="Layout"
+            href="https://algorithm-hopezaa.vercel.app/"
+            target="_blank"
+            rel="noreferrer"
+            ><span class="project-number mono">08</span>
+            <div class="project-name">
+              <h3>Algorithm</h3>
+              <p>Explore the Algorithm project.</p>
+            </div>
+            <span class="project-type mono">Open Project</span
+            ><span class="project-arrow" aria-hidden="true">↗</span></a
+          >
+        </div>
+      </section>
+
+      <section
+        class="motto-section section-wrap"
+        id="motto"
+        data-section="Motto"
+      >
+        <div class="motto-top mono" data-build="Details">
+          <span>04 / MOTTO</span><span>A NOTE TO SELF</span>
+        </div>
+        <div class="quote-wrap" data-build="Typography">
+          <span class="quote-mark" aria-hidden="true">“</span>
+          <blockquote>
+            Effort has never hurt anyone who is <em>determined.</em>
+          </blockquote>
+          <div class="quote-signature mono">
+            <span class="signature-line"></span> HOPEZAA
+          </div>
+        </div>
+        <span class="motto-asterisk" aria-hidden="true">✳</span>
+      </section>
+
+      <section
+        class="music section-wrap content-section"
+        id="music"
+        data-section="Audio Room"
+      >
+        <div class="music-layout">
+          <div class="music-intro" data-build="Typography">
+            <p class="eyebrow"><span>05 /</span> Audio Room · Other</p>
+            <h2>A soundtrack<br />for the <em>scroll.</em></h2>
+            <p>YouTube Playlist Player</p>
+            <p class="music-description">HopeZaa Playlist</p>
+            <a
+              class="text-link"
+              href="https://www.youtube.com/playlist?list=PLHwpzHeYmNyQuXnQdnCLgUq8J4LlAY1h4"
+              target="_blank"
+              rel="noreferrer"
+              >Open playlist on YouTube <span aria-hidden="true">↗</span></a
+            >
+          </div>
+          <div class="music-shell" data-build="Visuals">
+            <div class="music-heading mono">
+              <span><i class="status-dot"></i> HOPEZAA RADIO</span
+              ><span id="player-status">STANDBY</span>
+            </div>
+            <div class="youtube-player-wrap">
+              <div
+                id="youtube-player"
+                aria-label="YouTube playlist player"
+              ></div>
+              <button
+                class="player-cover"
+                id="load-playlist"
+                type="button"
+                aria-label="Load and play HopeZaa YouTube playlist"
+              >
+                <span class="record" aria-hidden="true"><span>HZ</span></span
+                ><span class="cover-copy mono"
+                  >YOUR SOUNDTRACK <span>▶ Load playlist</span></span
+                >
+              </button>
+            </div>
+            <div class="now-playing">
+              <div class="visualizer" aria-hidden="true">
+                <i></i><i></i><i></i><i></i><i></i>
+              </div>
+              <p id="track-name" role="status">HopeZaa Playlist</p>
+            </div>
+            <div class="player-controls">
+              <button
+                type="button"
+                id="prev-track"
+                aria-label="Previous track"
+                disabled
+              >
+                ↤</button
+              ><button
+                type="button"
+                class="play-button"
+                id="play-toggle"
+                aria-label="Load and play music"
+              >
+                Play <span aria-hidden="true">▶</span></button
+              ><button
+                type="button"
+                id="next-track"
+                aria-label="Next track"
+                disabled
+              >
+                ↦</button
+              ><label class="volume-control" for="volume"
+                ><span class="mono">VOL</span
+                ><input
+                  id="volume"
+                  type="range"
+                  min="0"
+                  max="100"
+                  value="45"
+                  aria-label="Volume"
+                  disabled
+              /></label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="contact section-wrap content-section"
+        id="contact"
+        data-section="Contact"
+      >
+        <div class="contact-top" data-build="Details">
+          <p class="eyebrow"><span>06 /</span> Contact</p>
+          <span class="mono">LET’S MAKE A CONNECTION ↗</span>
+        </div>
+        <div class="contact-heading" data-build="Typography">
+          <h2>
+            Good things start<br />with a <em>hello.</em
+            ><span class="red-text">↗</span>
+          </h2>
+          <a
+            class="contact-email"
+            href="https://mail.google.com/mail/u/0/?fs=1&amp;to=hoperoopngam@gmail.com&amp;tf=cm"
+            target="_blank"
+            rel="noreferrer"
+            >hoperoopngam@gmail.com <span aria-hidden="true">↗</span></a
+          >
+        </div>
+        <div class="contact-grid">
+          <a
+            class="contact-link"
+            data-build="Layout"
+            href="https://github.com/HopeZaa"
+            target="_blank"
+            rel="noreferrer"
+            ><span class="contact-code mono"
+              >GH <span aria-hidden="true">↗</span></span
+            ><strong>GitHub</strong><small>github.com/HopeZaa</small></a
+          ><a
+            class="contact-link"
+            data-build="Details"
+            href="https://mail.google.com/mail/u/0/?fs=1&amp;to=hoperoopngam@gmail.com&amp;tf=cm"
+            target="_blank"
+            rel="noreferrer"
+            ><span class="contact-code mono"
+              >GM <span aria-hidden="true">↗</span></span
+            ><strong>Gmail</strong><small>hoperoopngam@gmail.com</small></a
+          ><a
+            class="contact-link"
+            data-build="Visuals"
+            href="https://web.facebook.com/im.hxpe/?_rdc=1&amp;_rdr#"
+            target="_blank"
+            rel="noreferrer"
+            ><span class="contact-code mono"
+              >FB <span aria-hidden="true">↗</span></span
+            ><strong>Facebook</strong><small>im.hxpe</small></a
+          ><a
+            class="contact-link"
+            data-build="Typography"
+            href="https://www.instagram.com/im._hxpe/"
+            target="_blank"
+            rel="noreferrer"
+            ><span class="contact-code mono"
+              >IG <span aria-hidden="true">↗</span></span
+            ><strong>Instagram</strong><small>im._hxpe</small></a
+          >
         </div>
       </section>
     </main>
 
-    <script src="script.js"></script>
+    <footer class="site-footer section-wrap">
+      <a class="brand footer-brand" href="#home"
+        ><span class="brand-mark">HZ<span>↗</span></span
+        ><span>HOPEZAA.</span></a
+      >
+      <p class="mono">Sirawich Roopngam · Code &amp; curiosity</p>
+      <a class="back-top mono" href="#home">BACK TO TOP ↑</a>
+    </footer>
+    <div id="agent-layer" class="agent-layer" aria-hidden="true"></div>
+    <div
+      class="build-dock"
+      id="build-dock"
+      role="group"
+      aria-label="Scroll animation controls"
+    >
+      <div class="dock-agents" aria-hidden="true">
+        <span>L</span><span>T</span><span>V</span><span>D</span>
+      </div>
+      <div class="dock-info">
+        <span class="dock-title mono"
+          ><i class="status-dot"></i>
+          <span id="build-status">SCROLL TO ASSEMBLE</span></span
+        ><span class="dock-detail mono" id="build-detail"
+          >A little motion. A lot of personality.</span
+        >
+      </div>
+      <div class="dock-progress" aria-hidden="true">
+        <span id="build-progress"></span>
+      </div>
+      <button
+        class="motion-toggle mono"
+        id="motion-toggle"
+        type="button"
+        aria-pressed="true"
+        title="Toggle scroll animations"
+      >
+        Motion <span id="motion-label">on</span></button
+      ><button
+        class="replay-button"
+        id="replay-build"
+        type="button"
+        aria-label="Replay page build animation"
+        title="Replay build animation"
+      >
+        ↻
+      </button>
+    </div>
   </body>
 </html>
