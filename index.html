@@ -9,7 +9,7 @@
       name="description"
       content="HopeZaa — Sirawich Roopngam. Chulalongkorn University student [CEDT 04]. Code, creative interfaces, and technical projects."
     />
-    <title>HopeZaa — Sirawich Roopngam</title>
+    <title>HopeZaa</title>
     <link
       rel="icon"
       href="https://i.postimg.cc/J0LWpzZm/Hope-Zaa-Favicon.png"
@@ -18,10 +18,11 @@
     <script>
       document.documentElement.classList.add("js");
     </script>
-    <link rel="stylesheet" href="styles.css?v=20261107-scroll-2" />
-    <script src="script.js?v=20261107-scroll-2" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20261107-cinematic-4" />
+    <script src="script.js?v=20261107-cinematic-4" defer></script>
   </head>
   <body>
+    <canvas id="scene-canvas" aria-hidden="true"></canvas>
     <a class="skip-link" href="#home">Skip to content</a>
     <div class="page-progress" aria-hidden="true">
       <span id="page-progress"></span>
@@ -52,8 +53,45 @@
       </nav>
     </header>
 
+    <nav class="chapter-rail" aria-label="Page chapters">
+      <span class="rail-line" aria-hidden="true"></span
+      ><a href="#home" aria-label="Start section"
+        ><span class="rail-dot"></span
+        ><span class="rail-tooltip mono">00 / Start</span></a
+      ><a href="#profile" aria-label="About section"
+        ><span class="rail-dot"></span
+        ><span class="rail-tooltip mono">01 / About</span></a
+      ><a href="#skills" aria-label="Skills section"
+        ><span class="rail-dot"></span
+        ><span class="rail-tooltip mono">02 / Skills</span></a
+      ><a href="#achievement" aria-label="Work section"
+        ><span class="rail-dot"></span
+        ><span class="rail-tooltip mono">03 / Work</span></a
+      ><a href="#motto" aria-label="Motto section"
+        ><span class="rail-dot"></span
+        ><span class="rail-tooltip mono">04 / Motto</span></a
+      ><a href="#music" aria-label="Audio section"
+        ><span class="rail-dot"></span
+        ><span class="rail-tooltip mono">05 / Audio</span></a
+      ><a href="#contact" aria-label="Contact section"
+        ><span class="rail-dot"></span
+        ><span class="rail-tooltip mono">06 / Contact</span></a
+      >
+    </nav>
     <main id="main">
       <section class="intro-stage" aria-label="Scroll to build the website">
+        <div class="intro-script" aria-hidden="true">
+          <span class="intro-caption mono"
+            >A BLANK CANVAS. AN OPEN POSSIBILITY.</span
+          >
+          <div class="intro-display">
+            <span>WATCH IT</span
+            ><span class="intro-outline"
+              >TAKE SHAPE<span class="intro-punctuation">.</span></span
+            >
+          </div>
+          <span class="intro-counter mono">SCROLL / CREATE / REPEAT</span>
+        </div>
         <div class="intro-grid" aria-hidden="true">
           <span class="intro-cross intro-cross-one">+</span
           ><span class="intro-cross intro-cross-two">+</span>
@@ -102,6 +140,12 @@
             </div>
             <div class="identity-art" aria-hidden="true">
               <div class="art-grid"></div>
+              <canvas id="artifact-canvas" aria-hidden="true"></canvas
+              ><span class="artifact-hud mono"
+                >FORM / 001<span>GENERATIVE OBJECT</span></span
+              ><span class="artifact-axis" aria-hidden="true"
+                >X ─── Y ─── Z</span
+              >
               <span class="identity-outline">HZ</span
               ><span class="identity-solid">HZ<span>.</span></span>
               <div class="art-cross cross-one">+</div>
@@ -296,6 +340,18 @@
         </div>
       </section>
 
+      <div class="kinetic-ribbon" aria-hidden="true">
+        <div class="ribbon-track">
+          <span>CODE</span><i>✳</i><span class="ribbon-outline">CREATE</span
+          ><i>✳</i><span>EXPLORE</span><i>✳</i
+          ><span class="ribbon-outline">REPEAT</span><i>✳</i><span>CODE</span
+          ><i>✳</i><span class="ribbon-outline">CREATE</span>
+        </div>
+        <div class="ribbon-caption mono">
+          <span>FROM THOUGHT TO SOMETHING YOU CAN TOUCH</span
+          ><span>KEEP MAKING ↗</span>
+        </div>
+      </div>
       <section
         class="work section-wrap content-section"
         id="achievement"
@@ -320,7 +376,15 @@
             rel="noreferrer"
             aria-label="Open Portfolio"
             ><div class="portfolio-art" aria-hidden="true">
-              <span class="art-overline mono">HOPEZAA / SELECTED WORK</span
+              <span class="portfolio-window"
+                ><span class="portfolio-window-bar"
+                  ><i></i><i></i><i></i><span>hopezaa / portfolio</span></span
+                ><span class="portfolio-window-title"
+                  >HOPEZAA<span>↗</span></span
+                ><span class="portfolio-window-rule"></span
+                ><span class="portfolio-window-grid"
+                  ><i></i><i></i><i></i></span></span
+              ><span class="art-overline mono">HOPEZAA / SELECTED WORK</span
               ><span class="portfolio-art-title">MAKE<br /><i>IT REAL.</i></span
               ><span class="art-code mono"
                 >&lt;ideas&gt; → &lt;experiences&gt;</span
@@ -344,11 +408,25 @@
         </div>
         <div class="work-list">
           <a
-            class="project-row"
+            class="project-row project-code"
             data-build="Layout"
             href="https://www.borntodev.com/devlab/profile/66665"
             target="_blank"
             rel="noreferrer"
+            ><span class="project-preview visual-code" aria-hidden="true"
+              ><span class="mini-window"
+                ><span class="mini-chrome"
+                  ><i></i><i></i><i></i><span>devlab / editor</span></span
+                ><span class="mini-editor"
+                  ><span class="code-line"
+                    ><b>01</b><em>const</em> idea = () =&gt; {</span
+                  ><span class="code-line"
+                    ><b>02</b>&nbsp; <em>return</em> build(something);</span
+                  ><span class="code-line"><b>03</b>};</span
+                  ><span class="code-line code-dim"
+                    ><b>04</b>// keep going.</span
+                  ><span class="code-caret"></span></span></span
+              ><span class="preview-orbit"></span></span
             ><span class="project-number mono">02</span>
             <div class="project-name">
               <h3>Devlab</h3>
@@ -358,11 +436,31 @@
             ><span class="project-arrow" aria-hidden="true">↗</span></a
           >
           <a
-            class="project-row"
+            class="project-row project-git"
             data-build="Details"
             href="https://github.com/HopeZaa"
             target="_blank"
             rel="noreferrer"
+            ><span class="project-preview visual-git" aria-hidden="true"
+              ><svg viewBox="0 0 400 200" fill="none">
+                <path
+                  class="git-track"
+                  d="M94 40V160M94 110C94 76 205 126 205 78V40M94 160C94 112 304 175 304 115V64"
+                />
+                <path
+                  class="git-pulse"
+                  d="M94 40V160M94 110C94 76 205 126 205 78V40"
+                />
+                <g class="git-nodes">
+                  <circle cx="94" cy="40" r="9" />
+                  <circle cx="94" cy="110" r="9" />
+                  <circle cx="94" cy="160" r="9" />
+                  <circle cx="205" cy="40" r="9" />
+                  <circle cx="304" cy="64" r="9" />
+                </g></svg
+              ><span class="preview-caption mono"
+                >BRANCH. BUILD. REPEAT.</span
+              ></span
             ><span class="project-number mono">03</span>
             <div class="project-name">
               <h3>GitHub</h3>
@@ -372,11 +470,22 @@
             ><span class="project-arrow" aria-hidden="true">↗</span></a
           >
           <a
-            class="project-row"
+            class="project-row project-calc"
             data-build="Layout"
             href="https://comprog-cal.vercel.app/"
             target="_blank"
             rel="noreferrer"
+            ><span class="project-preview visual-calc" aria-hidden="true"
+              ><span class="calc-orbit"></span
+              ><span class="mini-calculator"
+                ><span class="calc-display"
+                  >( ideas + code )<b>= possibilities</b></span
+                ><span class="calc-keys"
+                  ><i>7</i><i>8</i><i>9</i><i>÷</i><i>4</i><i>5</i><i>6</i
+                  ><i>×</i><i>1</i><i>2</i><i>3</i><i>−</i><i>0</i><i>.</i
+                  ><i class="calc-equals">=</i><i>+</i></span
+                ></span
+              ><span class="calc-floating">ƒ(x)</span></span
             ><span class="project-number mono">04</span>
             <div class="project-name">
               <h3>ComProg-Cal</h3>
@@ -386,11 +495,20 @@
             ><span class="project-arrow" aria-hidden="true">↗</span></a
           >
           <a
-            class="project-row"
+            class="project-row project-gate"
             data-build="Typography"
             href="https://cu-gate.vercel.app/"
             target="_blank"
             rel="noreferrer"
+            ><span class="project-preview visual-gate" aria-hidden="true"
+              ><span class="gate-floor"></span
+              ><span class="gate-portal gate-back"></span
+              ><span class="gate-portal gate-middle"></span
+              ><span class="gate-portal gate-front"></span
+              ><span class="gate-core"></span
+              ><span class="preview-caption mono"
+                >AN OPEN POSSIBILITY ↗</span
+              ></span
             ><span class="project-number mono">05</span>
             <div class="project-name">
               <h3>CU-Gate</h3>
@@ -400,11 +518,37 @@
             ><span class="project-arrow" aria-hidden="true">↗</span></a
           >
           <a
-            class="project-row"
+            class="project-row project-graph"
             data-build="Details"
             href="https://github.com/HopeZaa/Graph_Algo"
             target="_blank"
             rel="noreferrer"
+            ><span class="project-preview visual-graph" aria-hidden="true"
+              ><svg viewBox="0 0 400 200" fill="none">
+                <g class="graph-edges">
+                  <path
+                    d="m55 135 83-92 64 75 56-83 89 100-145-17-64 54-83-37Z"
+                  />
+                  <path d="m138 43 120-8M55 135l147-17 56-83M138 172l209-37" />
+                </g>
+                <path class="graph-route" d="m55 135 83-92 64 75 145 17" />
+                <g class="graph-nodes">
+                  <circle cx="55" cy="135" r="12" />
+                  <circle cx="138" cy="43" r="12" />
+                  <circle cx="202" cy="118" r="12" />
+                  <circle cx="258" cy="35" r="12" />
+                  <circle cx="347" cy="135" r="12" />
+                  <circle cx="138" cy="172" r="12" />
+                </g>
+                <g class="graph-labels">
+                  <text x="55" y="139">A</text>
+                  <text x="138" y="47">B</text>
+                  <text x="202" y="122">C</text>
+                  <text x="258" y="39">D</text>
+                  <text x="347" y="139">E</text>
+                  <text x="138" y="176">F</text>
+                </g>
+              </svg></span
             ><span class="project-number mono">06</span>
             <div class="project-name">
               <h3>Graph-Algo</h3>
@@ -414,11 +558,20 @@
             ><span class="project-arrow" aria-hidden="true">↗</span></a
           >
           <a
-            class="project-row"
+            class="project-row project-borrow"
             data-build="Visuals"
             href="https://cu-borrow.vercel.app/"
             target="_blank"
             rel="noreferrer"
+            ><span class="project-preview visual-borrow" aria-hidden="true"
+              ><span class="borrow-card borrow-back"
+                ><i>↗</i><span></span><span></span></span
+              ><span class="borrow-card borrow-middle"
+                ><i>⇄</i><span></span><span></span></span
+              ><span class="borrow-card borrow-front"
+                ><i>⇄</i
+                ><span class="borrow-card-title">PASS IT<br />FORWARD.</span
+                ><span class="borrow-rule"></span></span></span
             ><span class="project-number mono">07</span>
             <div class="project-name">
               <h3>CU-Borrow</h3>
@@ -428,11 +581,20 @@
             ><span class="project-arrow" aria-hidden="true">↗</span></a
           >
           <a
-            class="project-row"
+            class="project-row project-algo"
             data-build="Layout"
             href="https://algorithm-hopezaa.vercel.app/"
             target="_blank"
             rel="noreferrer"
+            ><span class="project-preview visual-algo" aria-hidden="true"
+              ><span class="algo-track"
+                ><span><b>01</b><i>INPUT</i></span
+                ><em>→</em><span><b>02</b><i>THINK</i></span
+                ><em>→</em><span><b>03</b><i>SOLVE</i></span
+                ><em>→</em><span><b>04</b><i>REPEAT</i></span></span
+              ><span class="preview-caption mono"
+                >ONE STEP. THEN THE NEXT.</span
+              ></span
             ><span class="project-number mono">08</span>
             <div class="project-name">
               <h3>Algorithm</h3>
