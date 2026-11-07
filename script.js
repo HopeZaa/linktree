@@ -1268,9 +1268,20 @@
     playButton.replaceChildren(
       document.createTextNode(playing ? "Pause " : "Play "),
     );
-    const symbol = document.createElement("span");
+    const symbol = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg",
+    );
+    symbol.setAttribute(
+      "class",
+      `ui-icon ui-icon-${playing ? "pause" : "play"}`,
+    );
+    symbol.setAttribute("viewBox", "0 0 24 24");
     symbol.setAttribute("aria-hidden", "true");
-    symbol.textContent = playing ? "Ⅱ" : "▶";
+    symbol.setAttribute("focusable", "false");
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", playing ? "M8 5v14M16 5v14" : "M7 4v16l13-8Z");
+    symbol.append(path);
     playButton.append(symbol);
     playButton.setAttribute(
       "aria-label",

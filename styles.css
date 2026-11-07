@@ -5402,3 +5402,50 @@ main,
     opacity: 1;
   }
 }
+
+/* Vector icons keep iOS/Android emoji fonts out of decorative UI. */
+.ui-icon {
+  display: inline-block;
+  width: 0.85em;
+  height: 1em;
+  flex-shrink: 0;
+  vertical-align: -0.12em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+.ui-icon-asterisk {
+  width: 1em;
+  stroke-width: 1.6;
+}
+.ui-icon-play {
+  width: 0.8em;
+  fill: currentColor;
+  stroke: none;
+}
+.ui-icon-pause {
+  width: 0.8em;
+  stroke-width: 3;
+}
+.title-star,
+.motto-asterisk {
+  display: block;
+  width: 1em;
+  height: 1em;
+  line-height: 0;
+}
+.title-star > .ui-icon,
+.motto-asterisk > .ui-icon {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.ribbon-track > i {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
