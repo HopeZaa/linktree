@@ -3439,10 +3439,10 @@ main,
   color: #bdaaa1;
   line-height: 1;
 }
-.project-row:last-child {
+.project-row:last-child:nth-child(odd) {
   grid-column: 1/-1;
 }
-.project-row:last-child .project-preview {
+.project-row:last-child:nth-child(odd) .project-preview {
   height: 240px;
 }
 .preview-caption {
@@ -4855,10 +4855,10 @@ main,
   .project-arrow {
     font-size: 31px;
   }
-  .project-row:last-child {
+  .project-row:last-child:nth-child(odd) {
     grid-column: 1;
   }
-  .project-row:last-child .project-preview {
+  .project-row:last-child:nth-child(odd) .project-preview {
     height: 220px;
   }
   .mini-window {
